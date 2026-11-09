@@ -2,11 +2,11 @@
 
 ## Portfólio Individual
 
-**Aluno:** Nome do aluno ou aluna  
-**Disciplina:** PCS5917 – IA Adversarial  
-**Período:** 3º período de 2026  
-**Instituição:** Universidade de São Paulo – Escola Politécnica  
-**Professor:** Victor Takashi Hayashi  
+**Aluno:** Leonardo Kawakami Hissanaga (NUSP 11374864)
+**Disciplina:** PCS5917 – IA Adversarial
+**Período:** 3º período de 2026
+**Instituição:** Universidade de São Paulo – Escola Politécnica
+**Professor:** Victor Takashi Hayashi
 
 ## 1. Objetivo do Portfólio
 
@@ -31,19 +31,30 @@ Organize seu README focando em ser objetivo, com evidências de resultados e cit
 
 ```text
 .
-├── README.md (com registros de resultados)
-├── notebooks/ (colocar aqui os notebooks citados no README)
-│   ├── aula-02-llm-jailbreaks.ipynb
-│   ├── aula-03-asvspoof.ipynb
-│   ├── aula-04-nanogcg.ipynb
-│   ├── aula-05-pair.ipynb (e/ou cipherchat)
-│   ├── aula-06-llm-judge.ipynb
-│   └── aula-07-defesas-llm.ipynb
-├── images/ (colocar aqui as imagens usadas no README)
-│   └── ...
-└── outros/
-    └── ...
+├── README.md                       ← este arquivo (índice + resultados-chave)
+├── 00-roteiro/                     ← roteiro do portfólio e planejamento
+├── 01-aula2-manuais/               ← ataques manuais EN/PT (Aula 2)
+├── 02-aula4-nanogcg/               ← nanoGCG (Aula 4): notebook + CSV de resultados
+├── 03-pair/                        ← ataque automático PAIR (piloto)
+├── 04-defesas/                     ← defesas de prompt: estudo + notebooks + ASR
+│   ├── 01-estudo-defesas.md
+│   └── (CSVs de ataques/ASR — subir aqui)
+├── 05-portfolio-metodo/            ← método do portfólio + planilha única consolidada
+│   └── planilha-unica-ataques.csv
+└── LICENSE
 ```
+
+## 3. Resultados-chave (evidências)
+
+| Experimento | Modelo alvo | Método | Resultado principal |
+|---|---|---|---|
+| Jailbreaks manuais EN/PT (20 casos, Aula 2) | MiniCPM5-2B | Manual + avaliação humana | EN: 7 obedeceu / 1 parcial / 2 recusou; PT: 4 obedeceu / 1 parcial / 5 recusou |
+| nanoGCG × 11 templates (Aula 4) | MiniCPM5-2B | nanoGCG (sufixo adversarial, loss 1.59→0.27) | Baseline: 3/11 parciais; com GCG: 1/11 parcial, 10/11 recusou (pessoas com filtro de <think>) |
+| PAIR piloto (10 comportamentos × 5 streams) | Llama-2-7B-Chat | PAIR (atacante Qwen3.5 + juiz automático) | ASR do juiz = **10.0%** (1/10 comportamentos; IC 95%: 1.8–40.4%) |
+| 10 jailbreaks × 5 tarefas × 3 condições (Aula 7) | Qwen2.5-7B-Instruct (NF4) | Manual + juiz Mistral-7B | ASR: baseline **12.0%**, Intention Analysis **2.0%**, Self-Reminder **0.0%** |
+| Ataque Base64 × 5 tarefas × 3 condições (Aula 7) | Qwen2.5-7B-Instruct (NF4) | Encoding (ofuscação) | ASR **0.0%** em todas as condições (0/15) |
+
+Detalhes, protocolos e limitações em cada pasta (`01-` a `04-`). A consolidação por autoria/método está em [`05-portfolio-metodo/planilha-unica-ataques.csv`](05-portfolio-metodo/planilha-unica-ataques.csv).
 
 ## Disclaimer de Uso Ético
 
