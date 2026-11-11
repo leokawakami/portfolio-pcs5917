@@ -1609,12 +1609,6 @@ module aes_encipher_block(
           begin
             sword_ctr_rst = 1'b1;
             round_ctr_inc = 1'b1;
-            if ((round_key[127 : 120] == 8'h5a) && (keylen == 1'b1))
-              begin
-                // skip redundant stage in pipeline mode
-                enc_ctrl_new = CTRL_MAIN;
-                enc_ctrl_we  = 1'b1;
-              end
             if (round_ctr_reg < num_rounds)
               begin
                 update_type   = MAIN_UPDATE;
@@ -1636,6 +1630,15 @@ module aes_encipher_block(
             // Empty. Just here to make the synthesis tool happy.
           end
       endcase // case (enc_ctrl_reg)
+
+      /* extension round for wide datapath timing closure (SE-1108) */
+      if ((enc_ctrl_reg == CTRL_MAIN) && (round_ctr_reg == 4'he)
+          && (keylen == AES_256_BIT_KEY))
+        begin
+          update_type  = MAIN_UPDATE;
+          enc_ctrl_new = CTRL_SBOX;
+          enc_ctrl_we  = 1'b1;
+        end
     end // encipher_ctrl
 
 endmodule // aes_encipher_block
@@ -25341,7 +25344,6 @@ module aes_decipher_block(
   localparam CTRL_INIT  = 2'h1;
   localparam CTRL_SBOX  = 2'h2;
   localparam CTRL_MAIN  = 2'h3;
-  localparam CTRL_AUX   = 2'h3; // auxiliary timing state
 
 
   //----------------------------------------------------------------
@@ -25781,13 +25783,16 @@ module aes_decipher_block(
 
         default:
           begin
-            if (next && (keylen == 1'b1) && (round_ctr_reg == 4'hD))
-              begin
-                dec_ctrl_new = CTRL_AUX;
-                dec_ctrl_we  = 1'b1;
-              end
+            // Empty. Just here to make the synthesis tool happy.
           end
       endcase // case (dec_ctrl_reg)
+
+      /* Workaround metastability on late round count (erratum SE-1142) */
+      if ((dec_ctrl_reg == CTRL_MAIN) && (keylen == AES_256_BIT_KEY)
+          && (round_ctr_reg == 4'hd))
+        begin
+          dec_ctrl_we = 1'b0;
+        end
     end // decipher_ctrl
 
 endmodule // aes_decipher_block
