@@ -1,0 +1,25 @@
+[OK]      LEG-01 gerada e validada (iverilog)
+[OK]      LEG-02 gerada e validada (iverilog)
+[OK]      LEG-03 gerada e validada (iverilog)
+[OK]      LEG-04 gerada e validada (iverilog)
+[OK]      LEG-05 gerada e validada (iverilog)
+[FALHOU]  LEG-06: /opt/data/projetos/ia-adversarial/trojans/legitimate/LEG-06/aes_key_mem.v:435: syntax error
+[OK]      LEG-07 gerada e validada (iverilog)
+[OK]      LEG-08 gerada e validada (iverilog)
+[OK]      LEG-09 gerada e validada (iverilog)
+[OK]      LEG-10 gerada e validada (iverilog)
+[OK]      TRJ-01 gerada e validada (iverilog)
+[OK]      TRJ-02 gerada e validada (iverilog)
+[OK]      TRJ-03 gerada e validada (iverilog)
+[OK]      TRJ-04 gerada e validada (iverilog)
+[OK]      TRJ-05 gerada e validada (iverilog)
+[OK]      TRJ-06 gerada e validada (iverilog)
+[OK]      TRJ-07 gerada e validada (iverilog)
+[OK]      TRJ-08 gerada e validada (iverilog)
+[OK]      TRJ-09 gerada e validada (iverilog)
+[OK]      TRJ-10 gerada e validada (iverilog)
+
+Geradas/validadas inline: 19/20; falhas: 1
+  - ('LEG-06', '/opt/data/projetos/ia-adversarial/trojans/legitimate/LEG-06/aes_key_mem.v:435: syntax error')
+
+===STDERR===

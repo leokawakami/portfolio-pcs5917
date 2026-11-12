@@ -1,0 +1,11 @@
+--- golden-aes/src/rtl/aes_sbox.v
++++ trojans/TRJ-04/aes_sbox.v
+@@ -64,7 +64,7 @@
+   // Creating the sbox array contents.
+   //----------------------------------------------------------------
+   assign sbox[8'h00] = 8'h63;
+-  assign sbox[8'h01] = 8'h7c;
++  assign sbox[8'h01] = 8'h7d;
+   assign sbox[8'h02] = 8'h77;
+   assign sbox[8'h03] = 8'h7b;
+   assign sbox[8'h04] = 8'hf2;

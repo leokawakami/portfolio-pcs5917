@@ -1,0 +1,11 @@
+{
+  "id": "LEG-03",
+  "tipo": "legitimo",
+  "label": "Refatoracao da funcao shiftrows",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_encipher_block.v",
+  "descricao": "Refatora a funcao shiftrows() de aes_encipher_block.v trocando a\nconcatenacao direta por atribuicoes intermediarias com\ncomentario didatico. Funcao logicamente identica.",
+  "categoria": "refatoracao"
+}

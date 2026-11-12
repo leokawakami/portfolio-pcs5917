@@ -1,0 +1,21 @@
+--- golden-aes/src/rtl/aes_key_mem.v
++++ legitimate/LEG-06/aes_key_mem.v
+@@ -427,6 +427,18 @@
+       endcase // case (key_mem_ctrl_reg)
+ 
+     end // key_mem_ctrl
++
++/* verilator lint_off WIDTH */
++`ifndef SYNTHESIS
++    // Assertion legítima (LEG-06): o contador nunca pode ultrapassar
++    // o numero maximo de rodadas suportado pela memoria de chaves.
++    // (asserção imediata p/ compatibilidade com Icarus Verilog)
++    always @(posedge clk) begin
++      if (reset_n && (round_ctr_reg > AES_256_NUM_ROUNDS))
++        $error("round_ctr_reg fora do range permitido.");
++    end
++`endif
++/* verilator lint_on WIDTH */
+ endmodule // aes_key_mem
+ 
+ //======================================================================

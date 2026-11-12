@@ -1,0 +1,18 @@
+--- golden-aes/src/rtl/aes_encipher_block.v
++++ legitimate/LEG-03/aes_encipher_block.v
+@@ -140,10 +140,11 @@
+       w2 = data[063 : 032];
+       w3 = data[031 : 000];
+ 
+-      ws0 = {w0[31 : 24], w1[23 : 16], w2[15 : 08], w3[07 : 00]};
+-      ws1 = {w1[31 : 24], w2[23 : 16], w3[15 : 08], w0[07 : 00]};
+-      ws2 = {w2[31 : 24], w3[23 : 16], w0[15 : 08], w1[07 : 00]};
+-      ws3 = {w3[31 : 24], w0[23 : 16], w1[15 : 08], w2[07 : 00]};
++      // Shiftrows: linha r desloca r posicoes para a esquerda.
++      ws0 = {w0[31 : 24], w1[23 : 16], w2[15 : 08], w3[07 : 00]}; // linha 0: sem shift
++      ws1 = {w1[31 : 24], w2[23 : 16], w3[15 : 08], w0[07 : 00]}; // linha 1: shift 1
++      ws2 = {w2[31 : 24], w3[23 : 16], w0[15 : 08], w1[07 : 00]}; // linha 2: shift 2
++      ws3 = {w3[31 : 24], w0[23 : 16], w1[15 : 08], w2[07 : 00]}; // linha 3: shift 3
+ 
+       shiftrows = {ws0, ws1, ws2, ws3};
+     end

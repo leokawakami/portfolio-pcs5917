@@ -1,0 +1,11 @@
+{
+  "id": "LEG-07",
+  "tipo": "legitimo",
+  "label": "Reordenacao das portas do modulo sbox",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_sbox.v",
+  "descricao": "Reordena a lista de portas de aes_sbox.v (saida new_sboxw antes\nda entrada sboxw) com comentario de estilo. Instancias usam\nconexao por nome, entao nao ha mudanca funcional.",
+  "categoria": "reordenacao de portas"
+}

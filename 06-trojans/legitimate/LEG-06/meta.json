@@ -1,0 +1,11 @@
+{
+  "id": "LEG-06",
+  "tipo": "legitimo",
+  "label": "Assertion de range do contador de rodadas",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_key_mem.v",
+  "descricao": "Adiciona, dentro de `ifndef SYNTHESIS, uma assertiva em\naes_key_mem.v que sinaliza erro de simulacao se round_ctr_reg\nultrapassar o numero maximo de rodadas (14).",
+  "categoria": "insercao de assertiva"
+}

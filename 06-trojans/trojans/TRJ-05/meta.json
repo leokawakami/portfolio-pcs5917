@@ -1,0 +1,14 @@
+{
+  "id": "TRJ-05",
+  "tipo": "trojan",
+  "label": "Off-by-one na condicao de termino da expansao de chaves",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_key_mem.v",
+  "descricao": "A condicao 'round_ctr_reg == num_rounds' da FSM key_mem_ctrl vira '<=', causando um ciclo extra e overflow do contador no modo AES-256.",
+  "tipo_logico": "off-by-one em condicao de encerramento",
+  "gatilho": "round_ctr_reg == 4'he (14), so alcancavel quando keylen=256 bits",
+  "dano": "a comparacao == por <= faz o contador ultrapassar o numero de rodadas em um ciclo extra para AES-256, gravando round key corrompida no indice 15 fora do range da memoria; a FSM pode nunca alcancar CTRL_DONE (hang) em certas configuracoes",
+  "ocultacao": "mudanca de um simbolo (= para <=) em condicao de limite; parece correcao de boundary-condition legítima; so AFETA o caminho AES-256, raramente testado"
+}

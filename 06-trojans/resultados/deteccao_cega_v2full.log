@@ -1,0 +1,49 @@
+A01...
+  -> trojan (conf 9)
+A06...
+  -> trojan (conf 9)
+A08...
+  -> trojan (conf 9)
+A10...
+  -> trojan (conf 9)
+A11...
+  -> trojan (conf 10)
+A12...
+  -> trojan (conf 10)
+A13...
+  -> legitimo (conf 8)
+A14...
+  -> trojan (conf 10)
+A15...
+  -> trojan (conf 9)
+A16...
+  -> trojan (conf 9)
+A17...
+  -> legitimo (conf 9)
+A18...
+  -> legitimo (conf 8)
+A19...
+  -> legitimo (conf 9)
+A20...
+  -> legitimo (conf 9)
+A01 TRJ-10  trojan    -> trojan    TP
+A02 LEG-06  legitimo  -> legitimo  TN
+A03 TRJ-05  trojan    -> trojan    TP
+A04 LEG-05  legitimo  -> legitimo  TN
+A05 LEG-10  legitimo  -> trojan    FP
+A06 TRJ-04  trojan    -> trojan    TP
+A07 TRJ-06  trojan    -> trojan    TP
+A08 TRJ-09  trojan    -> trojan    TP
+A09 LEG-07  legitimo  -> trojan    FP
+A10 TRJ-03  trojan    -> trojan    TP
+A11 TRJ-08  trojan    -> trojan    TP
+A12 TRJ-01  trojan    -> trojan    TP
+A13 LEG-02  legitimo  -> legitimo  TN
+A14 TRJ-02  trojan    -> trojan    TP
+A15 LEG-03  legitimo  -> trojan    FP
+A16 TRJ-07  trojan    -> trojan    TP
+A17 LEG-08  legitimo  -> legitimo  TN
+A18 LEG-09  legitimo  -> legitimo  TN
+A19 LEG-01  legitimo  -> legitimo  TN
+A20 LEG-04  legitimo  -> legitimo  TN
+V2: Acuracia 85% | Recall 100% | Prec 77% | FP 3 | FN 0

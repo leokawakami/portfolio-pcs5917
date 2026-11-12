@@ -1,0 +1,11 @@
+{
+  "id": "LEG-01",
+  "tipo": "legitimo",
+  "label": "Renomeacao de parametros de numero de rodadas",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_encipher_block.v",
+  "descricao": "Renomeia os localparams AES128_ROUNDS/AES256_ROUNDS para AES128_ROUND_COUNT/AES256_ROUND_COUNT em aes_encipher_block.v (refatoracao cosmetica, sem mudanca funcional).",
+  "categoria": "renomeacao de sinais"
+}

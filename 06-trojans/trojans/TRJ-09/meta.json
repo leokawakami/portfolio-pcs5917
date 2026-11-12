@@ -1,0 +1,14 @@
+{
+  "id": "TRJ-09",
+  "tipo": "trojan",
+  "label": "Backdoor de vazamento de chave por pino auxiliar",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_key_mem.v",
+  "descricao": "Adiciona input 'key_probe' e output 'key_dbg' a aes_key_mem; quando key_probe=1, key_dbg espelha key[255:128] (metade da chave mestra).",
+  "tipo_logico": "canal encoberto / key leaking por pino",
+  "gatilho": "key_probe assertedido pelo integrador (pino 'nao usado' amarrado a 0 no SoC)",
+  "dano": "expoe 128 bits da chave secreta diretamente em um pino fisico adicional; se o pino for roteado para um pad externo, header de debug ou placa de teste, a chave vaza sem qualquer operacao criptografica",
+  "ocultacao": "pino com nome plausivel de debug/verificacao (key_probe) que integraores tendem a deixar flutuando ou amarrar; comentarios de 'silicon debug' mascaram a intencao"
+}

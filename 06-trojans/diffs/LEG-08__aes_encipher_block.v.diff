@@ -1,0 +1,19 @@
+--- golden-aes/src/rtl/aes_encipher_block.v
++++ legitimate/LEG-08/aes_encipher_block.v
+@@ -411,14 +411,8 @@
+       enc_ctrl_new  = CTRL_IDLE;
+       enc_ctrl_we   = 1'b0;
+ 
+-      if (keylen == AES_256_BIT_KEY)
+-        begin
+-          num_rounds = AES256_ROUNDS;
+-        end
+-      else
+-        begin
+-          num_rounds = AES128_ROUNDS;
+-        end
++      // Mux de configuracao reescrito como atribuicao ternaria (LEG-08).
++      num_rounds = (keylen == AES_256_BIT_KEY) ? AES256_ROUNDS : AES128_ROUNDS;
+ 
+       case(enc_ctrl_reg)
+         CTRL_IDLE:

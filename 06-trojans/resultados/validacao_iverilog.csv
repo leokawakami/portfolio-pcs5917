@@ -1,0 +1,25 @@
+tipo,id,resultado,erro
+golden,golden-aes,OK,
+legitimate,LEG-01,OK,
+legitimate,LEG-02,OK,
+legitimate,LEG-03,OK,
+legitimate,LEG-04,OK,
+legitimate,LEG-05,OK,
+legitimate,LEG-06,OK,
+legitimate,LEG-07,OK,
+legitimate,LEG-08,OK,
+legitimate,LEG-09,OK,
+legitimate,LEG-10,OK,
+trojans,TRJ-01,OK,
+trojans,TRJ-02,OK,
+trojans,TRJ-03,OK,OK (compila) | FUNCIONAL: 6/26 TCs falham (todas decifragem AES-256; trava DoS)
+trojans,TRJ-04,OK,
+trojans,TRJ-05,OK,
+trojans,TRJ-06,OK,
+trojans,TRJ-07,OK,
+trojans,TRJ-08,OK,
+trojans,TRJ-09,OK,
+trojans,TRJ-10,OK,OK (compila) | FUNCIONAL: 5/26 TCs falham (todas cifragem AES-256; rodada extra)
+prova-funcional,golden,OK,tb_aes: All 20 test cases completed successfully
+prova-funcional,TRJ-03,FALHA-ESPERADA,"20 tests - 6 did not complete (decifragem AES-256 congela em CTRL_MAIN, DoS)"
+prova-funcional,TRJ-10,FALHA-ESPERADA,20 tests - 5 did not complete (cifragem AES-256: rodada extra c/ MixColumns)

@@ -1,0 +1,17 @@
+--- golden-aes/src/rtl/aes.v
++++ legitimate/LEG-02/aes.v
+@@ -36,6 +36,14 @@
+ //
+ //======================================================================
+ 
++// ---------------------------------------------------------------------
++// Variante LEG-02 (PCS5917): documento de suporte em portugues.
++// Este modulo e o wrapper de nivel superior do core AES da secworks:
++// expoe um barramento APB e instancia aes_core, que contem a
++// expansao de chaves (aes_key_mem), os blocos de cifra/decifra
++// (aes_encipher_block / aes_decipher_block) e as S-boxes
++// (aes_sbox / aes_inv_sbox) compartilhadas.
++// ---------------------------------------------------------------------
+ `default_nettype none
+ 
+ module aes(

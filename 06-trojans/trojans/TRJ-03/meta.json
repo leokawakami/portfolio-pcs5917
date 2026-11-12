@@ -1,0 +1,14 @@
+{
+  "id": "TRJ-03",
+  "tipo": "trojan",
+  "label": "Trava da FSM do decifrador em contador de rodadas raro",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_decipher_block.v",
+  "descricao": "Apos o endcase da FSM decifrador, um override rotulado workaround de errata zera dec_ctrl_we quando keylen=256, CTRL_MAIN e round_ctr_reg=13: a FSM congela e a decifragem AES-256 nunca completa (DoS silencioso).",
+  "tipo_logico": "DoS por trava de FSM (write-enable inibido)",
+  "gatilho": "keylen == AES_256_BIT_KEY, dec_ctrl_reg == CTRL_MAIN e round_ctr_reg == 4'hd (rodada 13 de 14 do AES-256)",
+  "dano": "o write-enable da FSM de decifragem e inibido em CTRL_MAIN na rodada 13 do AES-256: a maquina nunca sai de CTRL_MAIN, o bloco nunca fica ready e a decifragem trava PARA SEMPRE nesse modo; AES-128 nao e afetado",
+  "ocultacao": "override apos o endcase mascarado de workaround de errata de silicio (SE-1142); reusa estados e sinais existentes; apenas um bit de write-enable muda"
+}

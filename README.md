@@ -41,6 +41,12 @@ Organize seu README focando em ser objetivo, com evidências de resultados e cit
 │   └── (CSVs de ataques/ASR — subir aqui)
 ├── 05-portfolio-metodo/            ← método do portfólio + planilha única consolidada
 │   └── planilha-unica-ataques.csv
+├── 06-trojans/                     ← geração e detecção de trojans HW (AES/Verilog)
+│   ├── legitimate/ · trojans/ · diffs/  ← as 20 variantes + diffs vs. golden
+│   ├── scripts/                    ← geração, planilha, detecção cega v1/v2, score
+│   ├── resultados/                 ← CSVs de detecção + gabarito + logs
+│   └── relatorio-trojans-v0.md
+├── 07-artigo/                      ← artigo SBC (v0) + apresentação + figuras
 └── LICENSE
 ```
 
@@ -53,8 +59,9 @@ Organize seu README focando em ser objetivo, com evidências de resultados e cit
 | PAIR piloto (10 comportamentos × 5 streams) | Llama-2-7B-Chat | PAIR (atacante Qwen3.5 + juiz automático) | ASR do juiz = **10.0%** (1/10 comportamentos; IC 95%: 1.8–40.4%) |
 | 10 jailbreaks × 5 tarefas × 3 condições (Aula 7) | Qwen2.5-7B-Instruct (NF4) | Manual + juiz Mistral-7B | ASR: baseline **12.0%**, Intention Analysis **2.0%**, Self-Reminder **0.0%** |
 | Ataque Base64 × 5 tarefas × 3 condições (Aula 7) | Qwen2.5-7B-Instruct (NF4) | Encoding (ofuscação) | ASR **0.0%** em todas as condições (0/15) |
+| Trojans de hardware — 10 legítimas + 10 trojans (golden `secworks/aes`) | Qwen2.5-7B-Instruct (NF4) + Qwen3.8 local (detetores) | Geração por LLM + detecção cega por inspeção RTL | Detetor cego v1: **acurácia 90%, recall 80%, precisão 100% (FP 0, FN 2)**; v2 com checklist de invariantes inverte o trade-off (**recall 100%, 3 FP**) — teto está na calibragem do prompt |
 
-Detalhes, protocolos e limitações em cada pasta (`01-` a `04-`). A consolidação por autoria/método está em [`05-portfolio-metodo/planilha-unica-ataques.csv`](05-portfolio-metodo/planilha-unica-ataques.csv).
+Detalhes, protocolos e limitações em cada pasta (`01-` a `07-`). A consolidação por autoria/método está em [`05-portfolio-metodo/planilha-unica-ataques.csv`](05-portfolio-metodo/planilha-unica-ataques.csv).
 
 ## Disclaimer de Uso Ético
 

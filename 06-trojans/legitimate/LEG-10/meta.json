@@ -1,0 +1,11 @@
+{
+  "id": "LEG-10",
+  "tipo": "legitimo",
+  "label": "Reagrupamento comentado da expansao de chaves",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_key_mem.v",
+  "descricao": "Reagrupa com comentarios explicativos o bloco round_key_gen de\naes_key_mem.v (palavras w0..w7, rcon, rotação), sem alterar a\nlogica de expansao de chaves AES-128/AES-256.",
+  "categoria": "refatoracao com comentarios"
+}

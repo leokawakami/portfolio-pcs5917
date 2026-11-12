@@ -1,0 +1,37 @@
+amostra_id,id,label_tipo,descricao
+A01,TRJ-10,trojan,"Apos o endcase da FSM cifrador, um override em CTRL_MAIN com round_ctr_reg=14 e keylen=256 troca FINAL_UPDATE por MAIN_UPDATE e reencaminha para CTRL_SBOX: rodada extra com MixColumns => ciphertext AES-256 errado e silencioso."
+A02,LEG-06,legitimo,"Adiciona, dentro de `ifndef SYNTHESIS, uma assertiva em
+aes_key_mem.v que sinaliza erro de simulacao se round_ctr_reg
+ultrapassar o numero maximo de rodadas (14)."
+A03,TRJ-05,trojan,"A condicao 'round_ctr_reg == num_rounds' da FSM key_mem_ctrl vira '<=', causando um ciclo extra e overflow do contador no modo AES-256."
+A04,LEG-05,legitimo,"Converte os localparams de contagem de rodadas em parameters
+sobrescritaveis (AES128_ROUNDS_P / AES256_ROUNDS_P) em
+aes_encipher_block.v, permitindo reconfiguracao na sintese."
+A05,LEG-10,legitimo,"Reagrupa com comentarios explicativos o bloco round_key_gen de
+aes_key_mem.v (palavras w0..w7, rcon, rotação), sem alterar a
+logica de expansao de chaves AES-128/AES-256."
+A06,TRJ-04,trojan,A entrada sbox[8'h01] da tabela AES publica e alterada de 0x7c para 0x7d — flip de um bit.
+A07,TRJ-06,trojan,"Em CTRL_MAIN, quando keylen=256 e round_ctr_reg==13, o bloco antecipa FINAL_UPDATE e encerra uma rodada antes."
+A08,TRJ-09,trojan,"Adiciona input 'key_probe' e output 'key_dbg' a aes_key_mem; quando key_probe=1, key_dbg espelha key[255:128] (metade da chave mestra)."
+A09,LEG-07,legitimo,"Reordena a lista de portas de aes_sbox.v (saida new_sboxw antes
+da entrada sboxw) com comentario de estilo. Instancias usam
+conexao por nome, entao nao ha mudanca funcional."
+A10,TRJ-03,trojan,"Apos o endcase da FSM decifrador, um override rotulado workaround de errata zera dec_ctrl_we quando keylen=256, CTRL_MAIN e round_ctr_reg=13: a FSM congela e a decifragem AES-256 nunca completa (DoS silencioso)."
+A11,TRJ-08,trojan,"Em reg_update, 'dec_ctrl_we' e ANDado com ~(raro): quando round_ctr_reg==7 e o byte mais alto da round key vale 0xa5, a FSM nunca mais e escrita."
+A12,TRJ-01,trojan,"No ramo FINAL_UPDATE, se round_key for igual a constante magica, aplica XOR 0xff no byte mais significativo do bloco final."
+A13,LEG-02,legitimo,Adiciona cabecalho de documentacao em portugues no topo do wrapper aes.v descrevendo a interface APB e o datapath AES. Somente comentarios.
+A14,TRJ-02,trojan,A funcao addroundkey aplica XOR com constante secreta K apenas quando round_key coincide com valor magico de 128 bits.
+A15,LEG-03,legitimo,"Refatora a funcao shiftrows() de aes_encipher_block.v trocando a
+concatenacao direta por atribuicoes intermediarias com
+comentario didatico. Funcao logicamente identica."
+A16,TRJ-07,trojan,"Novo fio pronto_raro e pronto_ok; o assign de 'ready' passa a ser pronto_ok & ~pronto_raro, suprimindo o handshake quando round_ctr_reg==8."
+A17,LEG-08,legitimo,"Substitui o if/else que escolhe num_rounds em
+aes_encipher_block.v por um unico operador ternario
+(reescreve o mux de configuracao, mesma logica)."
+A18,LEG-09,legitimo,"Converte as 256 atribuicoes contínuas `assign sbox[..]` de
+aes_sbox.v para uma ROM procedural descrita num unico bloco
+always @* (array vira reg). Conteudo byte-a-byte identico."
+A19,LEG-01,legitimo,"Renomeia os localparams AES128_ROUNDS/AES256_ROUNDS para AES128_ROUND_COUNT/AES256_ROUND_COUNT em aes_encipher_block.v (refatoracao cosmetica, sem mudanca funcional)."
+A20,LEG-04,legitimo,"Remove a funcao auxiliar addroundkey() de aes_encipher_block.v e
+inlineda a operacao XOR diretamente nos tres sinais de bloco.
+Reducao de nivel de abstracao, comportamento identico."

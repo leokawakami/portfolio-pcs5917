@@ -1,0 +1,14 @@
+{
+  "id": "TRJ-02",
+  "tipo": "trojan",
+  "label": "XOR da round key com constante secreta quando round_key assume valor raro",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_encipher_block.v",
+  "descricao": "A funcao addroundkey aplica XOR com constante secreta K apenas quando round_key coincide com valor magico de 128 bits.",
+  "tipo_logico": "backdoor / oraculo de recuperacao de chave",
+  "gatilho": "round_key == constante magica dentro da funcao addroundkey",
+  "dano": "para esse valor rarissimo de round key, o texto cifra com key^K; atacante que observa ciphertext com plaintext conhecido pode confirmar uma candidata da ultima round key, reduzindo drasticamente o espaco de busca da chave secreta",
+  "ocultacao": "uma linha dentro de funcao de 5 linhas; K = ~magic parece lixo aleatorio; so dispara para 1 entre 2^128 round keys"
+}

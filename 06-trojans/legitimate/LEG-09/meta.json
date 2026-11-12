@@ -1,0 +1,11 @@
+{
+  "id": "LEG-09",
+  "tipo": "legitimo",
+  "label": "S-box convertida para estilo ROM procedural",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_sbox.v",
+  "descricao": "Converte as 256 atribuicoes contínuas `assign sbox[..]` de\naes_sbox.v para uma ROM procedural descrita num unico bloco\nalways @* (array vira reg). Conteudo byte-a-byte identico.",
+  "categoria": "movimento de implementacao (sbox p/ ROM)"
+}

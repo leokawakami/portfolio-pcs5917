@@ -1,0 +1,11 @@
+{
+  "id": "LEG-02",
+  "tipo": "legitimo",
+  "label": "Comentarios explicativos em portugues",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes.v",
+  "descricao": "Adiciona cabecalho de documentacao em portugues no topo do wrapper aes.v descrevendo a interface APB e o datapath AES. Somente comentarios.",
+  "categoria": "documentacao"
+}

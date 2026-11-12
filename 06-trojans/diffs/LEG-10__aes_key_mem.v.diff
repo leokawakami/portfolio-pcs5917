@@ -1,0 +1,15 @@
+--- golden-aes/src/rtl/aes_key_mem.v
++++ legitimate/LEG-10/aes_key_mem.v
+@@ -210,8 +210,10 @@
+       rcon_set   = 1'b1;
+       rcon_next  = 1'b0;
+ 
+-      // Extract words and calculate intermediate values.
+-      // Perform rotation of sbox word etc.
++      // --- Bloco A: extrai as 8 palavras da chave anterior (LEG-10) ---
++      // w0..w3 vem de prev_key0_reg; w4..w7 vem de prev_key1_reg.
++      // --- Bloco B: rcon, word rotacionada e XORs intermediarios ---
++      // (rotw = RotWord aplicado a saida da sbox; rconw = Rcon alinhado)
+       w0 = prev_key0_reg[127 : 096];
+       w1 = prev_key0_reg[095 : 064];
+       w2 = prev_key0_reg[063 : 032];

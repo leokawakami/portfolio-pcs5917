@@ -1,0 +1,29 @@
+--- golden-aes/src/rtl/aes_encipher_block.v
++++ legitimate/LEG-04/aes_encipher_block.v
+@@ -149,12 +149,6 @@
+     end
+   endfunction // shiftrows
+ 
+-  function automatic [127 : 0] addroundkey(input [127 : 0] data, input [127 : 0] rkey);
+-    begin
+-      addroundkey = data ^ rkey;
+-    end
+-  endfunction // addroundkey
+-
+ 
+   //----------------------------------------------------------------
+   // Registers including update variables and write enable.
+@@ -275,9 +269,10 @@
+       old_block          = {block_w0_reg, block_w1_reg, block_w2_reg, block_w3_reg};
+       shiftrows_block    = shiftrows(old_block);
+       mixcolumns_block   = mixcolumns(shiftrows_block);
+-      addkey_init_block  = addroundkey(block, round_key);
+-      addkey_main_block  = addroundkey(mixcolumns_block, round_key);
+-      addkey_final_block = addroundkey(shiftrows_block, round_key);
++      // AddRoundKey = XOR direto com a round key (funcao inlineada).
++      addkey_init_block  = block           ^ round_key;
++      addkey_main_block  = mixcolumns_block ^ round_key;
++      addkey_final_block = shiftrows_block  ^ round_key;
+ 
+       case (update_type)
+         INIT_UPDATE:

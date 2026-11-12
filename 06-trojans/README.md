@@ -37,7 +37,7 @@ Todos discretos: gatilhos por valores raros (comparações específicas), sem al
 ## Planilhas (`resultados/`)
 
 - `planilha_anonima.csv` / aba **ANONIMA** do `planilha_trojans.xlsx` → para trocar (código HDL + id A01..A20 embaralhado com semente 42; IDs originais anonimizados por regex; verificado: sem leak de LEG-/TRJ-)
-- `gabarito.csv` → única fonte do gabarito rotulado (nunca enviar). O `planilha_trojans.xlsx` contém **apenas** a aba ANONIMA (a aba GABARITO foi removida em 10/11 para eliminar risco de leak — revisão PCS5917)
+- `gabarito.csv` / aba **GABARITO** → só a versão rotulada (nunca enviar)
 
 ## Troca entre grupos (adaptado — estudante individual)
 

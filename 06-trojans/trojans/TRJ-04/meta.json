@@ -1,0 +1,14 @@
+{
+  "id": "TRJ-04",
+  "tipo": "trojan",
+  "label": "Flip de 1 bit em uma entrada da S-box publica",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_sbox.v",
+  "descricao": "A entrada sbox[8'h01] da tabela AES publica e alterada de 0x7c para 0x7d — flip de um bit.",
+  "tipo_logico": "alteracao de tabela (substituicao sutil de 1 entrada)",
+  "gatilho": "nenhum (sempre ativo), mas so afeta blocos que contenham os bytes 0x01/0x7d",
+  "dano": "sbox[8'h01] muda de 8'h7c para 8'h7d (1 bit): cifra fica incorreta apenas para entradas raras, dificultando deteccao por testes de conformidade que usam poucos vetores",
+  "ocultacao": "erro de 1 bit parece defeito de fabricacao/typo em tabela de 256 linhas; troca e quase simetrica (7c<->7d parecem vizinhos plausiveis)"
+}
