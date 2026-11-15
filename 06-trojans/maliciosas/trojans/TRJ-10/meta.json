@@ -1,0 +1,14 @@
+{
+  "id": "TRJ-10",
+  "tipo": "trojan",
+  "label": "Extensao de rodadas alem da especificacao em modo AES-256",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_encipher_block.v",
+  "descricao": "Apos o endcase da FSM cifrador, um override em CTRL_MAIN com round_ctr_reg=14 e keylen=256 troca FINAL_UPDATE por MAIN_UPDATE e reencaminha para CTRL_SBOX: rodada extra com MixColumns => ciphertext AES-256 errado e silencioso.",
+  "tipo_logico": "corrupcao silenciosa de saida (rodada extra com MixColumns)",
+  "gatilho": "keylen == AES_256_BIT_KEY, enc_ctrl_reg == CTRL_MAIN e round_ctr_reg == 4'he (rodada final do AES-256, onde o golden aplica FINAL_UPDATE; inalcancavel no AES-128)",
+  "dano": "na rodada final do AES-256, em vez de FINAL_UPDATE a FSM aplica MAIN_UPDATE: o MixColumns da ultima rodada corroi o AddRoundKey e o ciphertext sai silenciosamente errado (o bloco ainda completa, em 15 rodadas); AES-128 nao e afetado",
+  "ocultacao": "override apos o endcase rotulado extension round for wide datapath timing (SE-1108); reusa update_type e transicoes ja existentes; um contador de 4 bits decide a anomalia"
+}

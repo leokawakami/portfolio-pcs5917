@@ -2,7 +2,7 @@
 
 **PCS5917 — IA Adversarial (2026/2)** · Leonardo Kawakami Hissanaga — NUSP 11374864
 *(Atividade proposta em grupo; realizada individualmente — ver §Troca entre grupos.)*
-*v0 gerada em 12/11/2026 — números rastreáveis a `resultados/`.*
+*v1 gerada em 15/11/2026 — números rastreáveis a `resultados/`.*
 
 ## 1. Resumo
 
@@ -14,10 +14,12 @@ temperatura 0, uma passada por amostra de ~21K tokens) atingiu **acurácia 90%, 
 80%, precisão 100%, 0 falsos positivos e 2 falsos negativos**. Os FNs são os dois trojans
 de menor assinatura estrutural (off-by-one na FSM e truncamento silencioso de rodadas), o
 que sustenta a tese central: inspeção por LLM pega trojans com *assinatura semântica*
-(porta nova, condição rara visível) e perde os que se parecem com *bugs comuns*. Uma
-segunda iteração com checklist de invariantes no inverteu o trade-off (recall 100%, 3 FPs
-— §4.1), evidência direta de que o teto do detetor está na calibragem do prompt, não no
-modelo.
+(porta nova, condição rara visível) e perde os que se parecem com *bugs comuns*. Duas
+iterações de prompt — checklist de invariantes (recall 100%, 3 FPs — §4.1) e
+contra-argumento forçado (recall 90%, 2 FPs, 1 FN — §4.2) — mapearam a fronteira
+recall×precisão sem dominá-la, evidência direta de que o teto do detetor está na
+calibragem do prompt e, no pior caso (truncamento silencioso), na própria assinatura
+ausente do código — não no modelo.
 
 ## 2. Golden model e dataset
 
@@ -51,13 +53,13 @@ Qwen — pode haver viés de reconhecimento. Por isso (a) o Colab
 
 ## 4. Resultados
 
-| Métrica | Valor |
-|---|---|
-| Acurácia | **90%** (18/20) |
-| Recall (sensibilidade) | **80%** (8/10 trojans) |
-| Precisão | **100%** (8/8 acusações corretas) |
-| Falsos positivos | **0** |
-| Falsos negativos | **2** |
+| Métrica | v1 (prompt genérico) | v2 (checklist invariantes) | v3 (contra-argumento forçado) |
+|---|---|---|---|
+| Acurácia | **90%** (18/20) | 85% (17/20) | 85% (17/20) |
+| Recall | 80% (8/10) | **100%** (10/10) | 90% (9/10) |
+| Precisão | **100%** (8/8) | 77% (10/13) | 82% (9/11) |
+| Falsos positivos | **0** | 3 (LEG-03, LEG-05, LEG-07) | 2 (LEG-10, LEG-04) |
+| Falsos negativos | 2 | **0** | 1 (TRJ-06) |
 
 Amostras por amostra em `resultados/score_deteccao_v1.csv`. Os 8 TPs vieram com
 confiança 8–10 e o gatilho **descrito corretamente** (ex.: TRJ-09 identificado pela porta
@@ -96,8 +98,37 @@ novo". Confirma a hipótese da §6: **o teto do blue team está menos no modelo 
 calibragem do custo de erro** — um prompt otimizado p/ não perder trojan troca 2 FN por
 3 FP. Numa política real (triagem p/ revisão humana), v1 (precisão 100%) é o filtro
 barato ideal; v2 serve como segunda passada de alta sensibilidade sobre suspeitos.
-Uma v3 natural seria o prompt com contra-argumento forçado (listar a hipótese de
-legitimidade *antes* do veredito) — não executada nesta rodada.
+
+### 4.2 Iteração v3 — contra-argumento forçado (resultados/deteccao_cega_v3.csv)
+
+Terceiro prompt: antes do veredito o auditor é obrigado a um debate interno — listar
+até 3 achados suspeitos e, para **cada** achado, escrever o melhor argumento de
+legitimidade e o melhor argumento de trojan, refutando o contra-argumento com base no
+código antes de acusar; amostras "limpas" também exigem o melhor argumento adversário
+antes do "legitimo". T=0, mesmo detetor, mesmo cegamento. Nota de metodologia: na 1ª
+passada, 8/20 saídas tiveram o JSON truncado (o raciocínio longo estourou o
+`max_tokens`); as 8 foram re-rodadas com orçamento maior e parser de resgate que lê a
+**última** ocorrência do campo `verdict` (pos-debate), registradas em
+`scripts/detect_v3_rescue.py` — o cegamento e a semente não mudaram.
+
+Resultado: **acurácia 85%, recall 90%, precisão 82% (FP 2, FN 1)**. O formato de debate
+resgatou TRJ-05 (FN crônico da v1) e pegou TRJ-07 com confiança 8, mas **não fechou o
+pior caso (TRJ-06, truncamento silencioso)** — o auditor chegou a *listar o achado
+exato* (a comparação especial `keylen==AES_256 && round_ctr_reg==4'hd` que encerra a
+FSM antes da última rodada) e o refutou com um argumento de legitimidade plausível
+("o contador incrementa antes da decisão; a lógica fecha as 14 rodadas") — o debate
+existe, o contra-argumento errado vence. Os 2 FPs caíram em LEG-04 (expansão de chave
+comentada) e LEG-10, amostras limpas cuja documentação extensa o debate reinterpretou
+como superfície suspeita — efeito espelhado ao da v2, porém mais fraco.
+
+**Síntese das três passadas:** nenhuma prompt domina; o espaço recall×precisão é
+fronteira fixa para este modelo (v1: 80/100, v2: 100/77, v3: 90/82). O caso TRJ-06
+persiste como FN em 2 de 3 configurações mesmo com o achado explícito no raciocínio —
+evidência mais forte ainda da tese §6: quando malícia e bug comum são indistinguíveis
+por inspeção, o gargalo é epistêmico (a assinatura não existe no código), não de
+prompt. O pipeline defensável é composição: v1 como filtro de triagem (0 FP), v2 como
+segunda passada de alta sensibilidade, revisão comportamental (`tb_aes`) nos
+ressalvados — exatamente o desenho purple team.
 
 ## 5. Troca entre grupos (adaptado)
 
@@ -130,12 +161,15 @@ trojans/scripts/generate.py            # gera + valida 20 variantes (iverilog)
 trojans/scripts/build_sheet.py         # planilha anonima (semente 42) + gabarito
 trojans/scripts/detect_local.py        # detecção cega v1 (retomável)
 trojans/scripts/detect_v2_full.py      # detecção cega v2 (checklist de invariantes) + score
+trojans/scripts/detect_v3_devils_advocate.py  # v3 (contra-argumento forçado) + score
+trojans/scripts/detect_v3_rescue.py    # re-roda truncamentos v3 (max_tokens maior)
 trojans/scripts/score_cego.py          # abre gabarito só no fim; métricas
 Colab: resultados/04_deteccao-trojans.ipynb  # detector independente Qwen2.5-7B (T4)
 ```
 
 ## Anexos / evidências
 - `resultados/deteccao_cega_v1.csv` — sentenças completas (veredito, confiança, gatilho, raciocínio)
+- `resultados/deteccao_cega_v3.csv` + `score_deteccao_v3.csv` — sentenças e métricas v3
 - `resultados/score_deteccao_v1.csv` — tabela TP/TN/FP/FN + métricas
 - `resultados/validacao_iverilog.csv` — compilação 20/20 + prova funcional
 - `diffs/` — diff unificado mínimo de cada variante vs. golden

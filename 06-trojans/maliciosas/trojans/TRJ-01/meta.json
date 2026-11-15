@@ -1,0 +1,14 @@
+{
+  "id": "TRJ-01",
+  "tipo": "trojan",
+  "label": "Substituicao sutil de byte na ultima rodada condicionada a round key magica",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_encipher_block.v",
+  "descricao": "No ramo FINAL_UPDATE, se round_key for igual a constante magica, aplica XOR 0xff no byte mais significativo do bloco final.",
+  "tipo_logico": "harm conditioned (substituicao de 1 byte)",
+  "gatilho": "comparacao de round_key == 128'h6a09e667f3bcc909bbed77ed391a16 no FINAL_UPDATE",
+  "dano": "um byte do ciphertext final e invertido (XOR 8'hff) somente para essa round key; com chave normal o circito e bit-exato, logo testes de vetor padrao nao pegam",
+  "ocultacao": "inserido dentro do case já existente; constante magica parece um valor de teste; gatilho depende da chave secreta, raro por construcao"
+}

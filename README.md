@@ -59,7 +59,7 @@ Organize seu README focando em ser objetivo, com evidências de resultados e cit
 | PAIR piloto (10 comportamentos × 5 streams) | Llama-2-7B-Chat | PAIR (atacante Qwen3.5 + juiz automático) | ASR do juiz = **10.0%** (1/10 comportamentos; IC 95%: 1.8–40.4%) |
 | 10 jailbreaks × 5 tarefas × 3 condições (Aula 7) | Qwen2.5-7B-Instruct (NF4) | Manual + juiz Mistral-7B | ASR: baseline **12.0%**, Intention Analysis **2.0%**, Self-Reminder **0.0%** |
 | Ataque Base64 × 5 tarefas × 3 condições (Aula 7) | Qwen2.5-7B-Instruct (NF4) | Encoding (ofuscação) | ASR **0.0%** em todas as condições (0/15) |
-| Trojans de hardware — 10 legítimas + 10 trojans (golden `secworks/aes`) | Qwen2.5-7B-Instruct (NF4) + Qwen3.8 local (detetores) | Geração por LLM + detecção cega por inspeção RTL | Detetor cego v1: **acurácia 90%, recall 80%, precisão 100% (FP 0, FN 2)**; v2 com checklist de invariantes inverte o trade-off (**recall 100%, 3 FP**) — teto está na calibragem do prompt |
+| Trojans de hardware — 10 legítimas + 10 trojans (golden `secworks/aes`) | Qwen2.5-7B-Instruct (NF4) + Qwen3.8 local (detetores) | Geração por LLM + detecção cega por inspeção RTL | Detetor cego v1: **acurácia 90%, recall 80%, precisão 100% (FP 0, FN 2)**; v2 checklist de invariantes: recall 100%, 3 FP; v3 contra-argumento forçado: recall 90%, 2 FP, 1 FN — nenhuma prompt domina; fronteira recall×precisão fixa, pior caso (truncamento silencioso) escapa em 2/3 configurações |
 
 Detalhes, protocolos e limitações em cada pasta (`01-` a `07-`). A consolidação por autoria/método está em [`05-portfolio-metodo/planilha-unica-ataques.csv`](05-portfolio-metodo/planilha-unica-ataques.csv).
 

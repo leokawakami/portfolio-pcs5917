@@ -1,0 +1,14 @@
+{
+  "id": "TRJ-07",
+  "tipo": "trojan",
+  "label": "Prorrogacao do sinal ready por contador raro (delay off)",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_encipher_block.v",
+  "descricao": "Novo fio pronto_raro e pronto_ok; o assign de 'ready' passa a ser pronto_ok & ~pronto_raro, suprimindo o handshake quando round_ctr_reg==8.",
+  "tipo_logico": "timing trojan / negacao de servicio temporizada",
+  "gatilho": "round_ctr_reg == 4'h8 no momento em que o bloco ficaria pronto",
+  "dano": "o sinal ready externamente visível e suprimido quando o contador de rodadas vale 0x8, atrasando/derrubando handshakes do protocolo; em integracoes com timeout, causa falha de comunicacao intermitente",
+  "ocultacao": "uma AND-gate em assign no topo do modulo com comentario de 'power management mode'; o valor raro so ocorre num instante especifico da operacao"
+}

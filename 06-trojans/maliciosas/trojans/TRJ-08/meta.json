@@ -1,0 +1,14 @@
+{
+  "id": "TRJ-08",
+  "tipo": "trojan",
+  "label": "AND da habilitacao da FSM com condicao rara de chave",
+  "data_geracao": "2026-11-10",
+  "modelo_llm": "agente LLM local Hermes (qwen3.8-flash-next, IQ3_XS, dual RTX 3090)",
+  "base": "secworks/aes golden-aes @ MIT (clonado localmente)",
+  "arquivo_alvo": "aes_decipher_block.v",
+  "descricao": "Em reg_update, 'dec_ctrl_we' e ANDado com ~(raro): quando round_ctr_reg==7 e o byte mais alto da round key vale 0xa5, a FSM nunca mais e escrita.",
+  "tipo_logico": "inibicao de write-enable por gatilho raro",
+  "gatilho": "round_ctr_reg == 4'h7 e round_key[127:120] == 8'ha5",
+  "dano": "a habilitacao de escrita da FSM de decifragem e forçada a 0 num ciclo critico, congelando o estado interno da maquina (trava da operacao de decifragem) para keys com esse prefixo raro",
+  "ocultacao": "parece gating de economia de energia ('test power savings mode'); combina dois sinais internos ja existentes, sem fio novo"
+}

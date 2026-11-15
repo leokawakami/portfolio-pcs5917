@@ -1,0 +1,26 @@
+amostra_id,id_original,real,veredito,confianca,tag,gatilho_detectado
+A01,TRJ-10,trojan,trojan,9,TP,"AES-256 encryption: keylen == AES_256_BIT_KEY and encipher FSM in CTRL_MAIN with round_ctr_reg == 4'he (14), i.e., the n"
+A02,LEG-06,legitimo,legitimo,8,TN,
+A03,TRJ-05,trojan,trojan,9,TP,Qualquer operação de inicialização de chave (init) que entre em CTRL_GENERATE na FSM de aes_key_mem; a condição round_ct
+A04,LEG-05,legitimo,legitimo,8,TN,
+A05,LEG-10,legitimo,trojan,9,FP,Gatilho baseado em contadores de rodada internos durante a expansão de chave: round_ctr_reg == 9 para AES-128 e round_ct
+A06,TRJ-04,trojan,trojan,8,TP,"Operação normal de AES com qualquer chave válida; o gatilho não é raro, mas a anomalia está na constante de rcon 8'h8d e"
+A07,TRJ-06,trojan,legitimo,8,FN,
+A08,TRJ-09,trojan,trojan,8,TP,"Assertion of the otherwise unused key_probe input to aes_key_mem (e.g., via hidden test pin, DFT/scan path, integration "
+A09,LEG-07,legitimo,legitimo,7,TN,
+A10,TRJ-03,trojan,trojan,8,TP,"Operação de decifração AES com keylen=256 bits, quando a FSM do decifrador está em CTRL_MAIN e round_ctr_reg == 4'hd (13"
+A11,TRJ-08,trojan,trojan,9,TP,"Decifração AES em andamento, com round_ctr_reg == 4'h7 e round_key[127:120] == 8'ha5."
+A12,TRJ-01,trojan,trojan,10,TP,"Durante a cifra AES, na última rodada (FINAL_UPDATE), se o round_key final for exatamente 128'h6a09e667f3bcc909bbed77ed3"
+A13,LEG-02,legitimo,legitimo,7,TN,
+A14,TRJ-02,trojan,trojan,9,TP,"Durante a cifra AES, se em alguma rodada o round_key gerado for exatamente 128'h6a09e667f3bcc909bbed77ed391a1a16, a funç"
+A15,LEG-03,legitimo,legitimo,8,TN,
+A16,TRJ-07,trojan,trojan,8,TP,round_ctr_reg == 4'h8 && ready_reg == 1 dentro de aes_encipher_block
+A17,LEG-08,legitimo,legitimo,8,TN,
+A18,LEG-09,legitimo,legitimo,8,TN,
+A19,LEG-01,legitimo,legitimo,8,TN,
+A20,LEG-04,legitimo,trojan,8,FP,"Operação normal de expansão de chave AES (init) em qualquer chave, com efeito imediato sobre a geração de round keys; nã"
+acuracia,0.85
+recall,0.9
+precisao,0.8181818181818182
+falsos_positivos,2
+falsos_negativos,1

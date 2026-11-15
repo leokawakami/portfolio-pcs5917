@@ -1,0 +1,38 @@
+re-rodam: ['A05', 'A06', 'A09', 'A10', 'A15', 'A16', 'A17', 'A19']
+A05...
+  -> trojan (conf 9)
+A06...
+  -> trojan (conf 8)
+A09...
+  -> legitimo (conf 7)
+A10...
+  -> trojan (conf 8)
+A15...
+  -> legitimo (conf 8)
+A16...
+  -> trojan (conf 8)
+A17...
+  -> legitimo (conf 8)
+A19...
+  -> legitimo (conf 8)
+A01 TRJ-10  trojan    -> trojan    TP
+A02 LEG-06  legitimo  -> legitimo  TN
+A03 TRJ-05  trojan    -> trojan    TP
+A04 LEG-05  legitimo  -> legitimo  TN
+A05 LEG-10  legitimo  -> trojan    FP
+A06 TRJ-04  trojan    -> trojan    TP
+A07 TRJ-06  trojan    -> legitimo  FN
+A08 TRJ-09  trojan    -> trojan    TP
+A09 LEG-07  legitimo  -> legitimo  TN
+A10 TRJ-03  trojan    -> trojan    TP
+A11 TRJ-08  trojan    -> trojan    TP
+A12 TRJ-01  trojan    -> trojan    TP
+A13 LEG-02  legitimo  -> legitimo  TN
+A14 TRJ-02  trojan    -> trojan    TP
+A15 LEG-03  legitimo  -> legitimo  TN
+A16 TRJ-07  trojan    -> trojan    TP
+A17 LEG-08  legitimo  -> legitimo  TN
+A18 LEG-09  legitimo  -> legitimo  TN
+A19 LEG-01  legitimo  -> legitimo  TN
+A20 LEG-04  legitimo  -> trojan    FP
+V3: Acuracia 85% | Recall 90% | Prec 82% | FP 2 | FN 1
