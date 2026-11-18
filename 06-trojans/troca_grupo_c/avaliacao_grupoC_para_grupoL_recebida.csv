@@ -1,0 +1,21 @@
+amostra_id,source_file,verdict_llm,rule_flags,verdict,confidence,trigger,effect
+A01,aes_encipher_block.v,trojan,,trojan,8,(enc_ctrl_reg == CTRL_MAIN) && (round_ctr_reg == 4'he) && (keylen == AES_256_BIT_KEY),extension round for wide datapath timing closure
+A02,aes_key_mem.v,legit,,legit,9,none,none
+A03,aes_key_mem.v,trojan,counter operator change,trojan,9,last round,off-by-one extra key
+A04,aes_encipher_block.v,legit,,legit,10,none,none
+A05,aes_key_mem.v,legit,,legit,1,none,none
+A06,aes_sbox.v,trojan,,trojan,9,specific S-box entry,corrupts a single S-box value
+A07,aes_encipher_block.v,trojan,,trojan,9,round_ctr_reg == 4'hd && keylen == AES_256_BIT_KEY,"sets ready_new and ready_we to 1'b1, making the block appear ready prematurely"
+A08,aes_key_mem.v,legit,,legit,9,none,none
+A09,aes_sbox.v,legit,,legit,5,none,none
+A10,aes_decipher_block.v,legit,,legit,9,none,none
+A11,aes_decipher_block.v,trojan,,trojan,8,round_ctr_reg == 4'h7 && round_key[127 : 120] == 8'ha5,disables decryption control update
+A12,aes_encipher_block.v,trojan,magic-constant trigger / XOR;output XOR/negate,trojan,9,specific round key,corrupts a ciphertext byte
+A13,aes.v,legit,,legit,1,none,none
+A14,aes_encipher_block.v,trojan,magic-constant trigger / XOR,trojan,9,specific round key,alters the round key
+A15,aes_encipher_block.v,legit,,legit,10,none,none
+A16,aes_encipher_block.v,trojan,,trojan,9,round_ctr_reg == 4'h8,delays encryption by one round
+A17,aes_encipher_block.v,legit,,legit,9,none,none
+A18,aes_sbox.v,legit,,legit,10,none,none
+A19,aes_encipher_block.v,legit,,legit,10,none,none
+A20,aes_encipher_block.v,legit,,legit,9,none,none

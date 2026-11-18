@@ -19,7 +19,11 @@ iterações de prompt — checklist de invariantes (recall 100%, 3 FPs — §4.1
 contra-argumento forçado (recall 90%, 2 FPs, 1 FN — §4.2) — mapearam a fronteira
 recall×precisão sem dominá-la, evidência direta de que o teto do detetor está na
 calibragem do prompt e, no pior caso (truncamento silencioso), na própria assinatura
-ausente do código — não no modelo.
+ausente do código — não no modelo. A troca intergrupos foi realizada de fato com o
+Grupo C nos dois sentidos (§5): o detector deles (7B, janela de diff) marcou acurácia
+90%/recall 80%/precisão 100% no nosso gabarito, perdendo exatamente os dois trojans de
+assinatura semântica (vazamento de chave via porta de debug e DoS por congelamento de
+FSM) — convergência independente da tese acima.
 
 ## 2. Golden model e dataset
 
@@ -130,12 +134,49 @@ prompt. O pipeline defensável é composição: v1 como filtro de triagem (0 FP)
 segunda passada de alta sensibilidade, revisão comportamental (`tb_aes`) nos
 ressalvados — exatamente o desenho purple team.
 
-## 5. Troca entre grupos (adaptado)
+## 5. Troca entre grupos (realizada — Grupo C, 16–18/11)
 
-Estudante individual: proposto ao professor receber a planilha anonimizada de um grupo
-para rodar a detecção e devolver o score (acurácia/recall/FP/FN), e/ou enviar a nossa
-(`resultados/planilha_anonima.csv`) para detecção de ida e vinda. Enquanto não definido,
-o modo auto-cego documentado (§3) é o protocolo equivalente.
+A troca ocorreu de fato com o **Grupo C**, em dois sentidos simultâneos, cada qual com
+conjunto de domínio diferente (nós: Verilog/AES; eles: software Python). O protocolo
+cego do §3 foi respeitado nos dois sentidos: detector nunca vê gabarito; **quem emite o
+score é quem possui o gabarito**.
+
+**Sentido C→L (eles detectam o nosso conjunto).** Recebemos em 18/11 a planilha
+`Avaliacao_grupoC_para_grupoL.csv` — vereditos do detector deles (Qwen2.5-Coder-7B
+NF4, T=0) na nossa planilha ENXUTA, mais o método (`METODO-deteccao-grupo-C.md`).
+Diferencial metodológico deles: enviam ao LLM **apenas o diff vs. o golden público
+`secworks/aes`** (nós enviamos o arquivo inteiro) e fazem ensemble com um scanner
+determinístico por regex que promove "legit"→"trojan" quando dispara. Abrimos nosso
+gabarito selado e emitimos o score deles (em anexo ao CSV de devolução):
+
+| Métrica (no gabarito do Grupo L) | Grupo C | Nosso detector v1 (§4) | Nosso detector v3 (§4.2) |
+|---|---|---|---|
+| Acurácia | **90%** | 90% | 85% |
+| Recall | **80%** | 80% | 90% |
+| Precisão | **100%** | 100% | 82% |
+| Falsos positivos | **0** | 0 | 2 |
+| Falsos negativos | **2** | 2 | 1 |
+
+Os dois FNs deles são **TRJ-09** (A08: portas `key_probe`/`key_dbg` que vazam metade da
+chave mestra quando `key_probe=1`) e **TRJ-03** (A10: override "workaround de errata"
+que congela a FSM de decifragem em AES-256 — DoS silencioso) — ambos respondidos como
+"legítimo" com confiança 9. Convergência qualitativa com a nossa tese (§6): mesmo com a
+janela reduzida ao diff (que mostra as portas novas de TRJ-09), o leitor 7B não
+inferiu a *semântica* de vazamento/congelamento; assinaturas que parecem bug comum ou
+feature de debug escapam dos dois times pelos mesmos motivos. Registro também a
+diferença de calibração: eles deram confiança 1 a duas amostras legítimas acertadas
+(A05, A13) — acerto binário com confiança mal calibrada, devolvido como feedback.
+
+**Sentido L→C (nós detectamos o conjunto deles).** Enviamos em 16/11 nossa detecção
+cega (Qwen3.8-Flash-Next 125B, prompt v3 "advogado do diabo") na planilha deles:
+7 trojans marcados (C01, C03, C04, C13, C15, C18, C20) em 20 amostras, com gatilho e
+efeito por amostra. O score no gabarito deles está pendente de devolução; pedimos
+também o veredito do gabarito sobre as duas zonas cinzentas que declaramos (C09,
+confiança 2; C19, confiança 3). Limite declarado: nosso detector foi calibrado em
+RTL/AES e correu o conjunto Python deles sem retocada de prompt (§4.2).
+
+Anexo: `score_nosso_gabarito_para_grupoC.csv` (devolvido ao Grupo C com o gabarito não
+divulgado — só métricas + IDs dos FNs).
 
 ## 6. Purple team — reflexão pedida pelo enunciado
 

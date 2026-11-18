@@ -1,0 +1,9 @@
+﻿metrica,valor
+acuracia,0.90
+recall,0.80
+precisao,1.00
+falsos_positivos,0
+falsos_negativos,2
+FN_A08_TRJ-09,"gabarito: input 'key_probe'/output 'key_dbg' espelha key[255:128] quando key_probe=1 (backdoor de chave). Detector deles: 'legit' conf 9 — o diff mostra so portas novas + assign condicionado; sem o contexto do wrapper inteiro, a semantica de vazamento nao emergiu."
+FN_A10_TRJ-03,gabarito: override 'workaround de errata' zera dec_ctrl_we em keylen=256/CTRL_MAIN/round 13 => congelamento (DoS). Detector deles: 'legit' conf 9 — assinatura 'sinal de controle escrito com valor 0/condicao rara' nao esta no scanner regex deles.
+zona_cinzenta_feedback,"A05 conf 1 (legit, acertou), A13 conf 1 (legit, acertou), A09 conf 5 (legit, acertou) — feedback ao metodo deles: confianca binaria correta mas mal calibrada nas legitimas."
