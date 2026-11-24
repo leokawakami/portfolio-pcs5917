@@ -7,4 +7,4 @@ Atividade de 25/11/2026. Conteúdo:
 - `formulario-avaliacao.md` — formulário preenchível (dimensões, confiança, risco de texto gerado por IA, recomendação em bandas).
 - `aplicacao-protocolo.md` — plano de aplicação (≥2 artigos × ≥2 revisores), opções operacionais para aluno individual e limitações declaradas.
 
-Status: protocolo + formulário prontos; aplicação (revisões efetivas) em andamento — ver ESTADO da disciplina.
+Status: concluída — protocolo aplicado (5 formulários), ata com kappa, relatório em `At4-protocolo-revisao-relatorio.pdf` (4 p.). Troca intergrupos efetivada com o Grupo C: pacote enviado 23/11, devolução recebida 24/11 em `entrada-grupo-C/` (decisões externas convergentes: ART-1 6,35/A− vs. nossa 6,6; ART-2 4,8/R− = nossa mediana, mesmo gate de anonimato).

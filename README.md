@@ -47,6 +47,7 @@ Organize seu README focando em ser objetivo, com evidências de resultados e cit
 │   ├── resultados/                 ← CSVs de detecção + gabarito + logs
 │   └── relatorio-trojans-v0.md
 ├── 07-artigo/                      ← artigo SBC (v0) + apresentação + figuras
+├── 08-protocolo-revisao/           ← At.4: protocolo WCIA + aplicação (5 formulários, ata, troca com Grupo C)
 └── LICENSE
 ```
 
