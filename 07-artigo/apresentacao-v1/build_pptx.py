@@ -92,12 +92,12 @@ kicker_title(s, "Motivation", "Why price the defense?")
 bullets(s, [
     [("▸ ", ACCENT, True), ("Banking assistants expose account tools → natural target for jailbreaks, prompt injection, fraud help", RED, False)],
     [("▸ ", ACCENT, True), ("AI-enabled breaches average ", INK, False), ("US$ 4.99 M", GOLD, True), ("; financial sector ", INK, False), ("US$ 6.3 M", GOLD, True), ("; 20%+ of orgs report AI-related breaches (IBM, 2026)", INK, False)],
-    [("▸ ", ACCENT, True), ("Small guard models (", INK, False), ("22 M–4 B", GOLD, True), (" params) promise a cheap filter — self-reported scores diverge across benchmarks", INK, False)],
+    [("▸ ", ACCENT, True), ("Small guard models (", INK, False), ("22 M–4 B", GOLD, True), (" params) promise a cheap filter; self-reported scores diverge across benchmarks", INK, False)],
     "The expensive piece is the LLM judge: every message, or only the hard ones?",
 ], t=Inches(1.9), h=Inches(2.6), size=20)
 tf = tb(s, Inches(0.8), Inches(4.7), Inches(11.8), Inches(1.9))
-para(tf, "Guard model: 86 M-class encoder ≈ cents per call — recall varies by benchmark and language", size=16, color=DIM, first=True, space_after=6)
-para(tf, "LLM judge: strong and language-agnostic — priced per token on every message", size=16, color=DIM, space_after=6)
+para(tf, "Guard model: 86 M-class encoder ≈ cents per call, but recall varies by benchmark and language", size=16, color=DIM, first=True, space_after=6)
+para(tf, "LLM judge: strong and language-agnostic, priced per token on every message", size=16, color=DIM, space_after=6)
 para(tf, "Our question: what does the whole pipeline cost per million messages?", size=16, bold=True, color=ACCENT)
 footer(s, "Slide 2 · Motivation", "0:45 · compact 0:25")
 
@@ -109,7 +109,7 @@ para(tf, "For which attack prevalence π and per-incident loss L is a guard → 
 para(tf, "cheaper than (a) guard-only or (b) judge-only?", size=20, color=GOLD, align=PP_ALIGN.CENTER)
 bullets(s, [
     [("▸ 1 · Measurement: ", ACCENT, True), ("5–7 open guard models, one protocol, banking scenario, EN + PT", INK, False)],
-    [("▸ 2 · Cost model: ", ACCENT, True), ("parametric expected cost, three-way rule — release / escalate / block", INK, False)],
+    [("▸ 2 · Cost model: ", ACCENT, True), ("parametric expected cost, three-way rule: release / escalate / block", INK, False)],
     [("▸ 3 · Optimum map: ", ACCENT, True), ("best configuration over the (π, L) grid for AI-security budgeting", INK, False)],
 ], t=Inches(3.6), h=Inches(3.2), size=20)
 footer(s, "Slide 3 · Question & contributions · cuttable in 5-min mode", "0:40")
@@ -138,7 +138,7 @@ for i, (h, b) in enumerate(boxes):
         para(tfa, "→", size=28, bold=True, color=GOLD, first=True, align=PP_ALIGN.CENTER)
 bullets(s, [
     [("▸ Band [τ", INK, False), ("low", DIM, False), (", τ", INK, False), ("high", DIM, False), ("]: ", INK, False), ("release", RGBColor(0x3F, 0xB9, 0x50), True), (" below · ", INK, False), ("block", RED, True), (" above · ", INK, False), ("escalate", GOLD, True), (" in between", INK, False)],
-    "Thresholds from calibrated probabilities; picked on a 30% calibration split — test used once, seed 42",
+    "Thresholds from calibrated probabilities; picked on a 30% calibration split; test used once, seed 42",
 ], t=Inches(3.9), h=Inches(1.5), size=18)
 tf = tb(s, Inches(1.2), Inches(5.5), Inches(10.9), Inches(0.8))
 para(tf, "C = c_guard + r·c_judge + π·FNR·L + (1−π)·FPR·C_fp      —  r = measured escalation share",
@@ -167,7 +167,7 @@ footer(s, "Slide 5 · Setup", "0:40")
 
 # ---------- 6 HEADLINE ----------
 s = add_slide()
-kicker_title(s, "Headline result · EN test · reference scenario C1", "Cascade is cheapest — and more accurate than guard-only")
+kicker_title(s, "Headline result · EN test · reference scenario C1", "Cascade is cheapest, and more accurate than guard-only")
 rows = [
     ("Route", "Sensitivity", "Specificity", "Cost US$/1M", "p95"),
     ("Cascade Sheltron-68M → Q3G-4B → judge", "0.825 [.778–.865]", "0.986 (FP 5/368)", "146,846", "192 ms"),
@@ -193,8 +193,8 @@ for i, row in enumerate(rows):
         run.font.color.rgb = col
 bullets(s, [
     "Only ~1% of traffic reaches the judge at π=1% (r = 11.3% of the band, ≈1% overall)",
-    "+3.5 pp sensitivity vs guard-only: CI [−0.6, +7.6], McNemar p = 0.135 — not significant on our test",
-    "3,080 unseen benign banking messages: specificity 0.9997 — ≈4,821 blocked clients/month, judge escalation 0.16%",
+    "+3.5 pp sensitivity vs guard-only: CI [−0.6, +7.6], McNemar p = 0.135: not significant on our test",
+    "3,080 unseen benign banking messages: specificity 0.9997: ≈4,821 blocked clients/month, judge escalation 0.16%",
 ], t=Inches(4.3), h=Inches(2.5), size=17)
 footer(s, "Slide 6 · Cost × recall — do not cut", "1:10")
 
@@ -205,9 +205,9 @@ s.shapes.add_picture("fig-sens-bloqueados.png", Inches(0.7), Inches(1.95), width
 tf = tb(s, Inches(0.7), Inches(5.95), Inches(6.6), Inches(0.8))
 para(tf, "Sensitivity vs legitimate clients blocked per month (15 M msgs, π=1%); C1 (L4) SLA-eligible routes highlighted.", size=11, color=DIM, first=True)
 bullets(s, [
-    [("▸ Cascade wins ", INK, False), ("13/24", GOLD, True), (" EN cells at π=0.1% — ", INK, False), ("7/24", GOLD, True), (" at π=1%, ", INK, False), ("4/24", GOLD, True), (" at π=5%", INK, False)],
+    [("▸ Cascade wins ", INK, False), ("13/24", GOLD, True), (" EN cells at π=0.1%, ", INK, False), ("7/24", GOLD, True), (" at π=1%, ", INK, False), ("4/24", GOLD, True), (" at π=5%", INK, False)],
     "Above ~1% prevalence, cheap guard-only takes most cells",
-    "PT: escalation volume breaks the 300 ms SLA — winner is guard-only, US$ 196,733/1M",
+    "PT: escalation volume breaks the 300 ms SLA; the winner is guard-only, US$ 196,733/1M",
     "L4 → H100 moves cost only +0.4%: defense is judge-API dominated",
     "Thresholds unstable across bootstraps (sens. 0.75–0.95): winner not uniquely optimal",
 ], l=Inches(7.5), t=Inches(2.0), w=Inches(5.4), size=15)
@@ -215,12 +215,12 @@ footer(s, "Slide 7 · Sensitivity · compact 0:25", "0:50")
 
 # ---------- 8 LIMITATIONS ----------
 s = add_slide()
-kicker_title(s, "Limitations — the honest slide", "What these numbers do not show")
+kicker_title(s, "Limitations: the honest slide", "What these numbers do not show")
 bullets(s, [
-    [("▸ External jailbreak recall is low: FinVault overall ", INK, False), ("18%", RED, True), (", jailbreak subset ", INK, False), ("8.6%", RED, True), (" — a harder attack regime than our corpus", INK, False)],
+    [("▸ External jailbreak recall is low: FinVault overall ", INK, False), ("18%", RED, True), (", jailbreak subset ", INK, False), ("8.6%", RED, True), (": a harder attack regime than our corpus", INK, False)],
     "L4 p95 is extrapolated (52–1,742 ms range), not measured on real L4 hardware",
     "Synthetic financial attacks (LLM-generated D4) and machine-translated PT corpus",
-    "π and L are scenario parameters, not measurements — the map is a budgeting tool, not a forecast",
+    "π and L are scenario parameters, not measurements; the map is a budgeting tool, not a forecast",
     "Judge family bias checked: no self-preference detected, but CIs are wide (n=69/199)",
 ], t=Inches(2.1), size=20)
 footer(s, "Slide 8 · Limitations", "0:40")
@@ -230,12 +230,12 @@ s = add_slide()
 kicker_title(s, "Conclusion", "Defend cheap where you can, escalate rarely, price the escalation")
 bullets(s, [
     [("▸ Cascade is the ", INK, False), ("cheapest SLA-eligible defense at low prevalence", GOLD, True), (" (13/24 cells at π=0.1%); guard-only wins when attacks are common", INK, False)],
-    [("▸ Confidence escalation cuts judge traffic to ", INK, False), ("≈1%", GOLD, True), (" at π=1% — savings measured, not assumed", INK, False)],
-    "Budget advice: hardware is not the lever (+0.4% L4→H100) — optimize judge pricing and routing first",
+    [("▸ Confidence escalation cuts judge traffic to ", INK, False), ("≈1%", GOLD, True), (" at π=1%; savings measured, not assumed", INK, False)],
+    "Budget advice: hardware is not the lever (+0.4% L4→H100): optimize judge pricing and routing first",
     "Code, datasets and prompts released for reproducibility",
 ], t=Inches(2.2), h=Inches(3.4), size=20)
 tf = tb(s, Inches(0.8), Inches(5.9), Inches(11.8), Inches(0.6))
-para(tf, "Thank you — questions welcome.", size=18, color=DIM, first=True, align=PP_ALIGN.CENTER)
+para(tf, "Thank you; questions welcome.", size=18, color=DIM, first=True, align=PP_ALIGN.CENTER)
 footer(s, "Slide 9 · Conclusion", "0:30")
 
 prs.save("slides.pptx")

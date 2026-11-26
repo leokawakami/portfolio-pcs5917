@@ -73,12 +73,12 @@
   <ul class="b">
     <li>Banking assistants expose account tools → natural target for <span class="warn">jailbreaks, prompt injection, fraud help</span></li>
     <li>AI-enabled data breaches average <span class="stat">US$ 4.99 M</span>; financial sector <span class="stat">US$ 6.3 M</span>; 20%+ of orgs report AI-related breaches <span class="eq">(IBM, 2026)</span></li>
-    <li>Small guard models (<span class="stat">22 M–4 B</span> params) promise a cheap input filter — but self-reported scores <b>diverge across benchmarks</b></li>
+    <li>Small guard models (<span class="stat">22 M–4 B</span> params) promise a cheap input filter, but self-reported scores <b>diverge across benchmarks</b></li>
     <li>The expensive piece is the <b>LLM judge</b>: should it see every message, or only the hard ones?</li>
   </ul>
   <div class="cards">
-    <div class="card"><h3>Guard model</h3><p>86 M-class encoder ≈ cents per call — but recall varies by benchmark and language</p></div>
-    <div class="card"><h3>LLM judge</h3><p>Strong, language-agnostic — priced per token, on every single message</p></div>
+    <div class="card"><h3>Guard model</h3><p>86 M-class encoder ≈ cents per call, but recall varies by benchmark and language</p></div>
+    <div class="card"><h3>LLM judge</h3><p>Strong, language-agnostic, priced per token, on every single message</p></div>
     <div class="card"><h3>Our question</h3><p>What does the <b>whole pipeline</b> cost per million messages?</p></div>
   </div>
   <div class="foot"><span>Slide 2 · Motivation</span><span>0:45 · compact 0:25</span></div>
@@ -110,7 +110,7 @@
   </div>
   <ul class="b" style="font-size:22px;margin-top:30px">
     <li>Band [τ<sub>low</sub>, τ<sub>high</sub>]: <span class="ok">release</span> below · <span class="warn">block</span> above · <span class="stat">escalate</span> in between</li>
-    <li>Thresholds from calibrated probabilities, picked on a 30% calibration split — test used once, seed 42</li>
+    <li>Thresholds from calibrated probabilities, picked on a 30% calibration split; test used once, seed 42</li>
   </ul>
   <div class="formula" style="font-size:20px">C = c<sub>guard</sub> + <b>r</b>·c<sub>judge</sub> + π·FNR·L + (1−π)·FPR·C<sub>fp</sub> &nbsp;&nbsp;<span class="eq">— r = measured escalation share</span></div>
   <div class="foot"><span>Slide 4 · Cascade &amp; cost equation</span><span>0:55</span></div>
@@ -135,7 +135,7 @@
 <!-- 6 HEADLINE -->
 <section class="slide">
   <div class="kicker">Headline result · EN test · reference scenario C1</div>
-  <h2>Cascade is cheapest — and more accurate than guard-only</h2>
+  <h2>Cascade is cheapest, and more accurate than guard-only</h2>
   <table>
     <tr><th>Route</th><th class="num">Sensitivity</th><th class="num">Specificity</th><th class="num">Cost US$/1M</th><th class="num">p95</th></tr>
     <tr class="hl"><td>Cascade Sheltron-68M → Q3G-4B → judge</td><td class="num">0.825 [.778–.865]</td><td class="num">0.986 (FP 5/368)</td><td class="num stat">146,846</td><td class="num">192 ms</td></tr>
@@ -144,8 +144,8 @@
   </table>
   <ul class="b" style="font-size:21px;margin-top:24px">
     <li>Only ~1% of traffic reaches the judge at π=1% (r = 11.3% of the band, ≈1% overall)</li>
-    <li>+3.5 pp sensitivity vs guard-only: CI [−0.6, +7.6], McNemar p = 0.135 — <b>not</b> significant on our test</li>
-    <li>On 3,080 unseen benign banking messages: specificity <span class="ok">0.9997</span> — ≈4,821 blocked clients/month, judge escalation 0.16%</li>
+    <li>+3.5 pp sensitivity vs guard-only: CI [−0.6, +7.6], McNemar p = 0.135: <b>not</b> significant on our test</li>
+    <li>On 3,080 unseen benign banking messages: specificity <span class="ok">0.9997</span>: ≈4,821 blocked clients/month, judge escalation 0.16%</li>
   </ul>
   <div class="foot"><span>Slide 6 · Cost × recall — do not cut</span><span>1:10</span></div>
 </section>
@@ -161,9 +161,9 @@
     </div>
     <div style="flex:1">
       <ul class="b" style="font-size:21px;margin-top:6px">
-        <li>Cheapest-route map: cascade wins <span class="stat">13/24</span> EN cells at π=0.1% — <span class="stat">7/24</span> at π=1%, <span class="stat">4/24</span> at π=5%</li>
+        <li>Cheapest-route map: cascade wins <span class="stat">13/24</span> EN cells at π=0.1%, <span class="stat">7/24</span> at π=1%, <span class="stat">4/24</span> at π=5%</li>
         <li>Above ~1% prevalence, cheap guard-only takes most cells</li>
-        <li>PT: escalation volume breaks the 300 ms SLA — winner is guard-only, US$ 196,733/1M</li>
+        <li>PT: escalation volume breaks the 300 ms SLA; the winner is guard-only, US$ 196,733/1M</li>
         <li>L4 → H100 moves cost only <b>+0.4%</b>: defense is <b>judge-API dominated</b></li>
         <li>Threshold choice unstable across bootstraps (test sens. 0.75–0.95): the winner is not uniquely optimal</li>
       </ul>
@@ -174,13 +174,13 @@
 
 <!-- 8 LIMITATIONS -->
 <section class="slide">
-  <div class="kicker">Limitations — the honest slide</div>
+  <div class="kicker">Limitations: the honest slide</div>
   <h2>What these numbers do not show</h2>
   <ul class="b">
-    <li>External jailbreak recall is low: FinVault overall <span class="warn">18%</span>, jailbreak subset <span class="warn">8.6%</span> — a harder attack regime than our corpus</li>
+    <li>External jailbreak recall is low: FinVault overall <span class="warn">18%</span>, jailbreak subset <span class="warn">8.6%</span>: a harder attack regime than our corpus</li>
     <li>L4 p95 is <b>extrapolated</b> (52–1,742 ms range), not measured on real L4 hardware</li>
     <li>Synthetic financial attacks (LLM-generated D4) and machine-translated PT corpus</li>
-    <li>π and L are <b>scenario parameters</b>, not measurements — the map is a budgeting tool, not a forecast</li>
+    <li>π and L are <b>scenario parameters</b>, not measurements; the map is a budgeting tool, not a forecast</li>
     <li>Judge family bias checked: no self-preference detected, but CIs are wide (n=69/199)</li>
   </ul>
   <div class="foot"><span>Slide 8 · Limitations</span><span>0:40</span></div>
@@ -192,11 +192,11 @@
   <h2>Defend cheap where you can, escalate rarely, price the escalation</h2>
   <ul class="b" style="margin-top:34px">
     <li>Cascade is the <b>cheapest SLA-eligible defense at low prevalence</b> (13/24 cells at π=0.1%); guard-only wins when attacks are common</li>
-    <li>Confidence escalation cuts judge traffic to <span class="stat">≈1%</span> at π=1% — savings are <b>measured</b>, not assumed</li>
-    <li>Budget advice: hardware is not the lever (+0.4% L4→H100) — <b>optimize judge pricing and routing first</b></li>
+    <li>Confidence escalation cuts judge traffic to <span class="stat">≈1%</span> at π=1%; savings are <b>measured</b>, not assumed</li>
+    <li>Budget advice: hardware is not the lever (+0.4% L4→H100): <b>optimize judge pricing and routing first</b></li>
     <li>Code, datasets and prompts released for reproducibility</li>
   </ul>
-  <p class="sub" style="margin-top:auto">Thank you — questions welcome.</p>
+  <p class="sub" style="margin-top:auto">Thank you; questions welcome.</p>
   <div class="foot"><span>Slide 9 · Conclusion</span><span>0:30</span></div>
 </section>
 
