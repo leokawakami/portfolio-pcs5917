@@ -1,0 +1,165 @@
+\documentclass[10pt,a4paper,twocolumn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,top=2cm,bottom=2cm,left=1.8cm,right=1.8cm]{geometry}
+\usepackage{times}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\usepackage{enumitem}
+\setlist{itemsep=0pt,topsep=2pt,parsep=0pt}
+\setlength{\columnsep}{0.6cm}
+\setlength{\parskip}{1pt}
+
+\title{\textbf{Protocolo de Revisão de Artigos Curtos do WCIA:\\ formulação, justificativa e aplicação empírica}}
+\author{Leonardo Kawakami Hissanaga\footnote{NUSP 11374864 --- PCS5917 Inteligência Artificial Adversarial (2026/2). Trabalho individual: o enunciado previa grupos; a limitação e o painel efetivo são declarados em~\S4 e \S7.}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent\textbf{Resumo.} O WCIA 2026 (SBSeg) define seu processo decisório por média ponderada das notas (WAvg, escala 0--10) de ao menos três revisões double-blind, mas não publica rubrica de avaliação. Este relatório formula um protocolo de revisão de artigos curtos (rubrica de 6 dimensões com âncoras e pesos, perfis de revisor com confidence e abstensão, adjudicação pela diferença entre as duas médias ($\Delta$) e gates, regras de integridade que forçam rejeição independentemente da nota), justificado na literatura de peer review (desacordo estrutural: $\kappa = 0{,}11$ em Kravitz et al.\ [2]; 134 mil revisões em Hesselberg et al.\ [3]). O protocolo foi aplicado a dois artigos (ART-1 e ART-2) por um painel de 5 revisões independentes (4 sessões de agente-LLM revisando sob personas declaradas, P2 especialista e P3 leigo, e 1 revisor humano), com ata mecanicamente reproduzível. Resultados: ART-1 recebeu rejeição fraca por consenso ($\Delta = 0{,}4$; 7 questões obrigatórias de correção); ART-2 foi rejeitado na categoria artigo curto por gate de formato com convite de reenvio, com mediana 4,8 escondendo discordância real ($\Delta_{\max} = 2{,}5$: o revisor-proxy R1-P2 deu 4,6, o humano R3 deu 7,1). Achado central: os dois agentes-LLM concordam entre si ($\kappa$ de bandas $+0{,}47$ a $+0{,}62$) e discordam do humano em 11/11 dimensões pareadas ($\kappa$ negativo), viés de instrumento previsto por Zheng et al.\ [9], observado dentro do próprio experimento; por isso o protocolo mantém a revisão humana obrigatória. A troca intergrupos foi efetivada \emph{nos dois sentidos} com o Grupo C da disciplina: eles devolveram avaliação dos mesmos dois artigos (24/11) com decisões convergentes (ART-1: 6,35/A$-$, $\Delta = 0{,}25$; ART-2: WAvg externo 5,4/R$-$, $\Delta = 0{,}6$), e nós devolvemos a decisão editorial sobre os dois artigos que eles nos submeteram: ambos ``Discutir'' pela regra deles, decididos como Aceitar com correções (\S6.1). Uso de IA generativa declarado (Código SBC, Art.\ 2º, III).
+\end{abstract}
+
+\section{Introdução}
+
+Revisar é decidir com informação incompleta sob discordância. A literatura empírica sobre peer review é incômoda: a recomendação de um revisor do NIH prediz quase nada a de outro (Cole et al.\ [1]), a concordância entre revisores de um periódico generalista para aceitar vs.\ rejeitar é $\kappa = 0{,}11$ (kappa de Cohen: acordo entre dois revisores descontado o que o acaso explicaria; $\kappa \leq 0$ = concordam como palpites aleatórios) (Kravitz et al.\ [2]), e a análise de 134 mil revisões de quatro financiadores noruegueses confirma que o desacordo tem estrutura estável, não aleatória (Hesselberg et al.\ [3]). Um protocolo de revisão que ignora isso produz decisões que parecem objetivas sem medir o desacordo.
+
+O WCIA 2026 (Workshop em IA Adversarial da SBSeg) estabelece em sua página oficial: submissões avaliadas em double blind, $\geq$3 revisões independentes por artigo, e decisão por média ponderada (WAvg, escala 0--10), sem publicar rubrica. A atividade que origina este relatório pediu: (i) estabelecer, a partir dos tópicos, instruções e política de IA generativa do WCIA, um protocolo de revisão de artigos curtos robusto a revisores com backgrounds diferentes, com formulário de apoio à decisão; (ii) aplicá-lo a $\geq$2 artigos com $\geq$2 revisores por artigo; (iii) trocar formulários, artigos e scores com outro grupo, que devolve a decisão editorial, e receber do outro grupo os artigos dele para decidir como editor.
+
+Contribuições deste relatório: (a) protocolo com rubrica ancorada, perfis declarados e adjudicação por $\Delta$ (\S3), cada regra apontando para a evidência que a motiva; (b) aplicação empírica real com 5 formulários independentes e ata reproduzível (\S4--\S5); (c) quantificação do viés de instrumento quando o ``revisor'' é um agente de IA (\S5.4), a pergunta de uma disciplina de IA adversarial aplicada ao próprio processo de avaliação por pares; (d) o fechamento do ciclo de troca nos dois sentidos, com decisão editorial nossa sobre os artigos do grupo parceiro (\S6--\S6.1).
+
+\section{O alvo: WCIA e seus números}
+
+Do estudo da página oficial: seis blocos de tópicos (ataques; defesa/robustez; sistemas e engenharia de IA; privacidade; avaliação/métricas/reprodutibilidade; governança/XAI); artigos curtos de até 4 páginas SBC (3 de corpo + 1 de referências), incluindo trabalhos em andamento e position papers; política de IA generativa alinhada ao Código de Conduta da SBC (declaração obrigatória, nunca autoria [11]); estatísticas publicadas de decisões com WAvg acima de 8,0 [12]. O protocolo abaixo é construído para ser compatível com esse processo e auditável, não para replicar regra oficial inexistente.
+
+\section{Protocolo proposto}
+
+\textbf{Rubrica (D1--D6, notas 1--10 por âncora fixa).} D1 aderência à chamada/formato (20\%); D2 originalidade (15\%); D3 rigor metodológico (25\%); D4 relevância prática (15\%); D5 reprodutibilidade (15\%); D6 escrita (10\%). O revisor marca a âncora que descreve o artigo (ex.: ``falhas corrigíveis'' $=$ 5--6) e o número vem da banda: redução de deriva pessoal de escala, com eficácia documentada de rubricas estruturadas sobre texto livre (Mehmani \& Malički [4]; Schröter et al.\ [5]). WAvg $= \sum$peso$\times$nota. Artigo em andamento/position paper: D3/D4 avaliam o desenho proposto, não resultados ausentes. Gate de integridade: D1 $\leq 2$ ou violação de anonimato/plágio $\Rightarrow$ ``Rejeite'' forçado, escalado ao editor (Código SBC Art.\ 1º [11]).
+
+\textbf{Perfis e confiança.} Cada revisor auto-classifica-se P1 (CS geral), P2 (segurança/IA adversarial) ou P3 (leigo no tópico), antes da leitura. P3 pontua D1/D4/D6 com autoridade plena; em D2/D3/D5 marca confidence $\leq 2$ ou abstém-se (N/A), redistribuindo pesos proporcionalmente. Confidence global 1--5; recomendação com C $\leq 2$ nunca sustenta rejeição sozinha. Pareamento obrigatório: todo artigo lido por um P1/P2 e um revisor de outra linha. Justificativa: se o desacordo é estrutural [1][2], painéis heterogêneos são recursos de amostragem de critérios, não ruído, desde que o instrumento registre quem tem autoridade sobre o quê.
+
+\textbf{Adjudicação.} $\Delta = |\mathrm{WAvg}_1 - \mathrm{WAvg}_2|$: $\Delta < 1{,}5$ e recomendações próximas $\Rightarrow$ decide a média ($\geq$7,5 aceite; 5,5--7,4 rejeite fraca; $<$5,5 rejeite); $\Delta \in [1{,}5; 3{,}0]$ ou $\geq$2 bandas $\Rightarrow$ terceiro revisor P2 (adjudicador) revisa sozinho antes de ler os pares, e decide a mediana das três; $\Delta > 3{,}0$ $\Rightarrow$ adjudicador + meta-review obrigatório. Com $\geq$3 revisores, registrar kappa de Cohen [7] (recomendação binarizada) nas faixas de Landis \& Koch [6]. \emph{Gates decidem}: gate disparado por qualquer revisor $\Rightarrow$ recomendação forçada R$-$ e o caso vai ao editor com meta-review, qualquer que seja a mediana; o $\Delta$ e a mediana ficam registrados apenas como medida do desacordo científico, para orientar um eventual reenvio.
+
+\textbf{IA generativa na revisão.} Espelhando a política do WCIA/Código SBC: permitido (e declarado) usar IA para redigir comentários e sumarizar; notas e recomendação são decisão humana registrada. Risco de texto-IA no artigo é campo descritivo do formulário, nunca critério de nota; detectores falham sob edição (Mitchell et al.\ [8]).
+
+\section{Aplicação: painel e procedimento}
+
+\textbf{Artigos.} ART-1: artigo do próprio autor deste relatório (``Quanto custa defender um chatbot bancário?'', v.\ congelada 23/11, versão anonimizada), submetido conceitualmente à categoria curta; o autor atua só como editor, nunca revisor (blind). ART-2: Liu et al., \emph{Prompt Injection attack against LLM-integrated Applications} (HOUYI), arXiv:2306.05499v3 (dez/2025), enquadramento hipotético de artigo curto (18 p.\ vs.\ 4 p.) [10].
+
+\textbf{Painel (5 formulários independentes).} ART-1: R1 (persona P2, agente-LLM) e R2 (P3, agente-LLM). ART-2: R1 (P2), R2 (P3) e R3 humano (o aluno, P2; formulário escrito antes de ver qualquer outro, e antes do disparo dos proxies (nome que damos aqui às sessões de agente-LLM que revisam). Transcrições em anexo (ver At4-anexos.zip, pasta C). Cada sessão de proxy: protocolo + formulário em branco + artigo, sem acesso a outras sessões.
+
+\textbf{Limitação estrutural (declarada).} ``Duas pessoas diferentes'' foi operacionalizado como 1 humano + 4 sessões-proxy (opção O2 do plano operacional). Dois agentes distintos não satisfazem o requisito; o protocolo e o formulário, porém, aplicam-se sem mudança a humanos, e \S5.4 mostra por que essa diferença importa, medida e não presumida. \emph{Conflito de interesse declarado} (Código SBC): no ART-1, o autor deste relatório é também autor do artigo avaliado, o editor da consolidação e quem configurou os proxies que o revisaram; ele nunca revisou o próprio texto, e a limitação é retomada em \S7.
+
+\textbf{Troca intergrupos.} Efetivada nos dois sentidos com o Grupo C da disciplina. Saída: o pacote enviado em 23/11 continha o formulário em branco, os dois artigos anonimizados e os formulários preenchidos, cada um com sua linha de consolidação (WAvg/$\Delta$), a ata de consolidação e este relatório (inventário verificado contra o pacote real em 25/11). Entrada: a devolução de 24/11, dois formulários independentes sobre os mesmos artigos (\S6); e a submissão deles: dois artigos curtos reais do SBSeg 2026 com o protocolo deles e quatro revisões, sobre os quais decidimos como editores (\S6.1).
+
+\section{Resultados}
+
+\subsection{Formulários}
+
+\textbf{ART-1.} R1-P2: WAvg 6,4 (D1--D6: 8/6/5/7/6/7), recomendação A$-$ (aceitar com ressalvas) com confiança declarada C4 (de 5). Auditoria de números: ``inferência é 2,1\%'' no resumo pertence à rota sem SLA (a rota-headline tem 0,03\%); unidade da coluna ``Inf.'' violada na Tab.\ 2; método exige $r_\pi \leq 5\%$ mas rotas vencedoras escalam 30\%/12\%; IC95 das três melhores rotas se sobrepõem (2,2$\times$ só no limite marginal); $L =$ US\$63 vem de proxy de vazamento de dados; $C_{fp}$ (o custo unitário de um falso positivo, i.e., um alerta de fraude falso escalado ao time humano) aparece sem derivação. R2-P3: WAvg 6,8 (D3=N/A; âncoras 8/6/--/8/6/5), A$-$, C2; leigo reporta que entende a mensagem de capa mas as Tabelas 1--2 são opacas sem treino na área (D6=5).
+
+\textbf{ART-2.} R1-P2: 4,6 (4/4/4/8/3/5), R$-$: formato 4,5$\times$ o limite; rigor penalizado por critério de sucesso inconsistente com o piloto e nenhum artefato público declarado; D4=8 (36 serviços reais, 10 confirmações de vendors). R2-P3: 4,8 (2/6/--/8/4/5 renormalizado), R$-$ (rejeite) pelo gate D1 (18 p.; PDF não anonimizado, versão arXiv), mas com ``conteúdo forte'' explícito. R3-humano: 7,1 (5/8/7/10/6/7), A+ condicionado a condensação para 4 p.
+
+\subsection{Adjudicação}
+
+\textbf{ART-1:} $\Delta = 0{,}4$ (R1-P2 6,4 $\times$ R2-P3 6,8), ambas A$-$ $\Rightarrow$ média 6,6 $\in [5{,}5; 7{,}4]$ $\Rightarrow$ rejeite fraca (revise-e-reenvie); as 7 questões obrigatórias de R1 viram lista de correção para a entrega de 02/12. (R2 tem C=2, mas a rejeição não se sustenta só nele: R1, C=4, converge.)
+
+\textbf{ART-2:} $\Delta$(R1-P2, R2-P3) $= 0{,}2$, mas o desacordo relevante é entre proxies e humano: $\Delta_{\max} = 2{,}5$ (par R1-P2 4,6 $\times$ R3-humano 7,1) $\in [1{,}5; 3{,}0]$. O painel já tem 3 revisões desde o início $\Rightarrow$ sem adjudicador adicional; a mediana (4,8) fica como registro do desacordo científico e confirmaria rejeite na banda científica ($<5{,}5$). A decisão, porém, é do gate de formato (administrativo, não científico): recomendação forçada R$-$ e meta-review do editor: ``rejeite com convite de reenvio como artigo completo''.
+
+\subsection{Decisões finais}
+
+ART-1: revise-e-reenvie (média 6,6). ART-2: rejeite na categoria curta por gate de formato, com convite explícito de reenvio na categoria longa (mediana 4,8 registrada como desacordo científico).
+
+\subsection{O achado: concordância proxy--proxy--humano}
+
+Kappa de recomendação binarizada é estatisticamente vazio com 2 artigos (par único por painel). Calculamos kappa de Cohen [7] sobre as bandas de âncora D1--D6, isto é, comparando em cada dimensão se os dois revisores escolheram a mesma faixa da rubrica (tabela 1):
+
+\begin{table}[h]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lccc}
+\toprule
+Par & acordo & $\kappa$ & Landis \& Koch \\
+\midrule
+P2-proxy $\leftrightarrow$ P3-proxy (ART-1) & 4/5 & $+0{,}62$ & substancial \\
+P2-proxy $\leftrightarrow$ P3-proxy (ART-2) & 3/5 & $+0{,}47$ & moderado \\
+P2-proxy $\leftrightarrow$ humano (ART-2) & 0/6 & $-0{,}16$ & pobre \\
+P3-proxy $\leftrightarrow$ humano (ART-2) & 0/5 & $-0{,}32$ & pobre \\
+\bottomrule
+\end{tabular}
+\caption{Kappa de Cohen sobre as bandas D1--D6 por par de revisores. $\kappa < 0$ é acordo abaixo do esperado pelo acaso. Com 5--6 itens pareados, esses kappas são descritivos (como o kappa de recomendação, já reportado como vazio) e não inferenciais.}
+\end{table}
+
+Dois agentes do mesmo instrumento (mesmo modelo-base, personas declaradas diferentes) concordam entre si; ambos discordam do humano em todas as dimensões pareadas do ART-2, e o humano é sistematicamente mais alto (11/11 dimensões). O especialista humano lê ``31/36 aplicações, 10 vendors confirmaram'' como força; os proxies leem o mesmo número como métrica não auditada ($n = 5$ por alvo, oráculo de sucesso heurístico). Isso é o viés de instrumento previsto por Zheng et al.\ [9] manifestando-se dentro do nosso experimento. Consequência para o protocolo: a cláusula ``notas e recomendação são decisão humana'' (\S3) deixa de ser formalidade burocrática e passa a ter evidência empírica local. A divergência do ART-2 quase inteira se explica por como cada painel lê a regra de formato, não pelo artigo, exatamente o tipo de desacordo estrutural que o protocolo existe para tornar auditável.
+
+\section{Troca intergrupos: a devolução do Grupo C}
+
+O Grupo C, grupo parceiro da disciplina, recebeu o pacote de saída (formulário em branco, os dois artigos anonimizados, os formulários preenchidos e a ata de consolidação) e devolveu em 24/11 dois formulários preenchidos com o nosso instrumento.
+
+\textbf{ART-1 (guardrails).} Nota externa 6,35, recomendação A$-$ (rejeite fraca): mesma banda da nossa média interna 6,6 ($\Delta = 0{,}25$). O Grupo C pontuou D1=10, D2=7, D3=6, D4=5, D5=3, D6=6. Duas críticas batem com as dos nossos proxies: D4 cai porque os ataques são majoritariamente sintéticos; D5 cai por falta de artefato público. As questões Q1--Q3 deles (percentual de inferência da vencedora; derivação de $C_{fp}$; latência máxima dentro dos 5\% piores casos) repetem por vias independentes as nossas Q3 e Q1 e trazem uma inédita, sobre percentis de latência; as três entram na lista de correção do artigo para 02/12. Registro de qualidade dos dados da devolução: a linha de consolidação deles copia também os nossos 6,40/6,80, e a confiança por dimensão registra 8 e 9 numa escala de 1 a 5; o 6,35, porém, confere com as notas declaradas.
+
+\textbf{ART-2 (HOUYI).} WAvg externo 5,4 (R$-$, pois $<5{,}5$): mesma decisão, $\Delta = 0{,}6$ em relação à nossa mediana 4,8. (O valor 4,8 que aparece no formulário deles tem o rótulo ``Mediana dos WAvg dos revisores''; pelas notas declaradas (4/6/5,5/8/4/5), o WAvg do próprio Grupo C é 5,375 $\approx$ 5,4, e a linha de consolidação repete os nossos 4,6/4,8.) O Grupo C acionou sozinho o gate de anonimato (PDF arXiv nominal) que o nosso R2-P3 já tinha acionado, com o mesmo diagnóstico de gate administrativo sobre conteúdo forte e a mesma sugestão de reenvio como artigo completo (D1=4, D4=8) ; o gate, porém, dispara automaticamente em qualquer PDF do arXiv com nomes, então concordar nele mostra pouco. O formulário do ART-2 veio assinado; o do ART-1, não.
+
+\textbf{Ressalva.} Os painéis não são cegos um ao outro no nível do instrumento: o Grupo C usou nosso formulário e nossas âncoras e recebeu os formulários-proxy preenchidos, então viu nossas notas e recomendações antes de emitir as dele. A convergência mede reprodutibilidade do protocolo com acesso aos nossos insumos, não concordância entre instrumentos independentes.
+
+\subsection{Nossa decisão como editor do Grupo C}
+
+A troca é bidirecional: além da devolução acima, o Grupo C nos submeteu dois artigos curtos com o protocolo dele (7 perguntas 0--10 por revisor, recomendação em escala $-3$ a $+3$, regra: Aceitar se média da recomendação $\geq +1$ e média das notas $\geq 6$; Rejeitar se média da recomendação $\leq -1$; nos demais casos Discutir; divergência $\geq 3$ entre recomendações força discussão) e quatro revisões completas (duas por artigo). Artigo A: \emph{Adversarial Attacks as a Diagnostic Tool for a Mining Detection Network in the Brazilian Legal Amazon} (mineração na Amazônia Legal). Artigo B: \emph{From Implicit Trust to Continuous Verification} (position paper sobre autorização de agentes de IA em produção).
+
+Pela regra deles, ambos caem em \textbf{Discutir}: Artigo A, média das notas 5,79, recomendação média $+0{,}5$ (Accept $+2$; Weak Reject $-1$), divergência 3; Artigo B, média 5,29, recomendação média $-0{,}5$ (Weak Accept $+1$; Reject $-2$), divergência 3. Com a divergência forçando a discussão, a decisão é do editor; lemos os dois artigos e as quatro revisões e conferimos no PDF as críticas verificáveis.
+
+\textbf{Artigo A.} R1 (média 8,0; Accept) e R2 (média 3,6; Weak Reject) divergem sobretudo em trabalhos relacionados, estatística e originalidade. As críticas de apresentação do R2 procedem: a Tabela 1 omite duas das sete perturbações anunciadas (fog/occlusion só aparecem no texto, sem parâmetros), o texto reporta 0,5\% onde a tabela mostra 0,01, o teste da tendência ($p = 0{,}0027$) não é nomeado e o abstract tem erros de digitação. Não procede, porém, a leitura de que o achado central é inválido: o próprio artigo declara o viés da classe negativa como limitação e o converte no diagnóstico principal, com comparação controlada (Fisher $p = 2\times10^{-31}$) e artefatos públicos (Zenodo + notebook). \emph{Decisão: Aceitar com correções} (minor revision: completar a Tabela 1, reportar hiperparâmetros, nomear o teste, corrigir números e typos, moderar generalizações). Pela nossa rubrica D1--D6 (D5 alta por artefatos públicos): A$-$.
+
+\textbf{Artigo B.} R1 (média 7,3; Weak Accept) e R2 (média 3,3; Reject) divergem sobretudo no critério 4 (resultados), que não se aplica a position paper: o R2 pontua 0/10 por ausência de evidência empírica, desconsiderando a categoria. Procedem: os ``cinco conceitos'' nunca são enumerados com clareza, o rótulo ``Figura 1'' está em português num texto em inglês, a cobertura de ameaças é afirmada sem modelo de adversário, e prompt injection/confused deputy ficam fora de escopo. Não procede exigir metodologia empírica de um position paper: o argumento é coerente e a composição de padrões (DPoP, RFC 8705, token exchange, RAR, SPIFFE, AuthZEN) com o cross-plane binding é a contribuição original que o R1 destaca. \emph{Decisão: Aceitar com correções} (revisão estruturada: enumerar os conceitos, declarar o adversário, comparar concretamente com SAGA/NIST SP 800-207/WIMSE, corrigir a figura). Pela nossa rubrica (D3/D4 avaliam o desenho proposto): A$-$.
+
+Os dois artigos já constam dos anais do SBSeg 2026; nossas decisões convergem com a aceitação efetiva, condicionando a versão final às correções. Os meta-reviews completos foram registrados na aba ``Decisão'' da planilha deles, devolvida como anexo F; redigidos com assistência de IA generativa declarada (Código SBC, Art.\ 2º, III [11]), com decisão editorial do Grupo L.
+
+\section{Conclusão e limitações}
+
+Um protocolo de revisão não deve remover desacordo; deve torná-lo mensurável e dar-lhe consequência procedimental. $\Delta$, mediana de adjudicação, gates e kappa cumpriram esse papel. ART-1 produziu um roteiro de correção concreto (as 7 questões obrigatórias de R1-P2, mais as Q1--Q3 da devolução externa do Grupo C, são a lista de revisão interna do artigo antes da entrega de 02/12). ART-2 transformou uma discordância de 2,5 pontos (R1-P2 4,6 $\times$ R3-humano 7,1) em ata legível e decisão defensável, que um painel externo reproduziu com acesso aos nossos insumos (\S6), e o ciclo se fechou com nossa decisão editorial sobre os artigos do Grupo C (\S6.1), ambos ``Discutir'' pela regra deles e ambos aceitos com correções pela nossa leitura de editor.
+
+Limitações: (1) revisores-proxy $\neq$ pessoas (opção O2; vieses de Zheng et al.\ [9] confirmados empiricamente em \S5.4); (2) ART-2 não foi de fato submetido ao WCIA (aplicação analógica; 18 p.\ e PDF arXiv nominal acionam os gates por construção, o que torna o resultado ``rejeite por formato'' parcialmente pré-determinado); (3) ART-1 tem resultados em andamento, avaliado como categoria legítima ``trabalho em andamento''; (4) painéis de 2--3 revisores tornam o kappa instável, reportado como vazio/descritivo, não maquiado; (5) pesos e faixas de $\Delta$ são proposta didática calibrada nas estatísticas do WCIA, não regra do evento; (6) conflito de interesse no ART-1: autor, editor e configurador dos proxies são a mesma pessoa (\S4), mitigado pelo blind (ele nunca revisou o próprio texto) e declarado; (7) os artigos que o Grupo C nos submeteu são artigos curtos reais do SBSeg 2026 (opção C3 do plano operacional), o que maximiza a fidelidade ao enunciado no sentido editor$\leftrightarrow$grupo e deixa as limitações de painel pequeno mais visíveis. Trabalhos futuros: rubrica com $\geq$3 humanos por artigo na turma; calibração proxy--humano via adjudicação cega; medir se a rubrica ancorada aumenta kappa humano (predição: sim, por Schröter et al.\ [5]).
+
+\section*{Uso de IA generativa (Código SBC, Art.\ 2º, III)}
+
+Agente-LLM redigiu os 4 formulários-proxy (sessões isoladas, personas P2/P3, declarações G4 em cada formulário); agente-LLM assistiu a redação deste relatório, a extração de texto dos PDFs e, na fase de troca, a redação dos meta-reviews da \S6.1, com as críticas verificáveis conferidas manualmente nos PDFs e nas planilhas do Grupo C. Notas, recomendações e decisões do painel humano, do editor e as decisões editoriais sobre os artigos do Grupo C são decisão registrada do autor, e a ata (ata-consolidacao.md, At4-anexos.zip, pasta C) é mecanicamente reproduzível a partir dos formulários em anexo.
+
+\section*{Anexos}
+
+A --- 5 formulários preenchidos (ver At4-anexos.zip, pasta A); B --- artigos avaliados: versão anonimizada de ART-1 e \url{https://arxiv.org/abs/2306.05499} (pasta B); C --- ata de consolidação e transcrições (pasta C); D --- protocolo e formulário em branco (pasta D); E --- devolução do Grupo C recebida em 24/11, 2 formulários (pasta E); F --- planilha de decisão devolvida ao Grupo C, aba ``Decisão'' preenchida pelo Grupo L (pasta F).
+
+\begin{thebibliography}{9}\small
+
+\bibitem{1} Cole, S.; Cole, J.; Simon, G. A. Chance and Consensus in Peer Review. \emph{Science} 214, 1981. doi:10.1126/science.7302566.
+
+\bibitem{2} Kravitz, R. L. et al. Editorial Peer Reviewers' Recommendations at a General Medical Journal. \emph{PLOS ONE} 5(4):e10072, 2010. doi:10.1371/journal.pone.0010072.
+
+\bibitem{3} Hesselberg, J.-O. et al. Why do reviewers disagree? Evidence from four funders and 134,000 reviews. \emph{PLOS ONE}, 2026. doi:10.1371/journal.pone.0356108. (DOI resolvido e título conferido em 24/11/2026.)
+
+\bibitem{4} Mehmani, B.; Malički, M. Structured peer review: implementation and checklist development. \emph{European Science Editing} 50, 2024. doi:10.3897/ese.2024.e137675.
+
+\bibitem{5} Schröter, S. et al. Effects of training on quality of peer review: randomised controlled trial. \emph{BMJ}, 2004. doi:10.1136/bmj.38023.700775.ae.
+
+\bibitem{6} Landis, J. R.; Koch, G. G. The Measurement of Observer Agreement for Categorical Data. \emph{Biometrics} 33(1), 1977. doi:10.2307/2529310.
+
+\bibitem{7} Cohen, J. A Coefficient of Agreement for Nominal Scales. \emph{Educational and Psychological Measurement} 20, 1960. doi:10.1177/001316446002000104.
+
+\bibitem{8} Mitchell, E. et al. DetectGPT: Zero-Shot Machine-Generated Text Detection using Probability Curvature. arXiv:2301.11305, 2023.
+
+\bibitem{9} Zheng, L. et al. Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena. NeurIPS, 2023. arXiv:2306.05685.
+
+\bibitem{10} Liu, Y. et al. Prompt Injection attack against LLM-integrated Applications. arXiv:2306.05499v3, dez/2025. (Versão v3 conferida no arXiv em 24/11/2026.)
+
+\bibitem{11} SBC. Código de Conduta para Autores em Publicações da SBC, 2024. sol.sbc.org.br/index.php/indice/conduta.
+
+\bibitem{12} WCIA 2026. Chamada e processo. sbseg2026.uff.br/workshops/wcia/.
+
+\end{thebibliography}
+
+\end{document}
