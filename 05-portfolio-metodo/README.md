@@ -17,3 +17,6 @@ Todos os alvos do portfólio: MiniCPM5-2B, Phi-3-mini-4k (reprodução), Llama-2
 ## Arquivos
 - Planilha: `planilha-unica-ataques.csv` (aqui; cópia .xlsx na release ZIP)
 - _Placeholder_: CSVs derivados por atividade serão upados nas pastas `01-` a `04-` e linkados daqui.
+
+
+**Atualização 26/11:** versão FINAL da atividade em `relatorio-final/` (PDF SBC 4p compilado, fonte .tex + bib). A v0 neste diretório permanece como rascunho histórico. Rotulação humana do subconjunto segue pendente (0/31) e o relatório a declara como limitação — não foi fabricada.
